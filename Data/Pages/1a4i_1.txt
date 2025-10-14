@@ -1,0 +1,775 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>scPDB - 1a4i entry / Site 1</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="content-type"     content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="Content-Language" content="en"/>
+    <meta name="reply-to"               content=""/>
+    <meta name="publisher"              content="DESAPHY Jeremy"/>
+    <meta name="Robots"                 content="all"/>
+    <meta name="robots"                 content="index, follow"/>
+    <meta name="Cache-Control"          content=" no-store, no-cache, must-revalidate" />
+    <meta name="Cache-Control"          content=" post-check=0, pre-check=0" />
+    <meta name="Pragma"                 content=" no-cache" />
+    <meta name="Accept-Encoding"        content="gzip, deflate"/>
+    <meta name="Content-Encoding"       content="gzip"/>
+    <meta name="distribution"           content="global"/>
+    <meta name="keywords"     lang="en"  content="global"/>
+    <meta name="description" lang="en"  content="scPDB Form"/>
+    <meta name="author" lang="fr"       content="ROGNAN Didier"/>
+    <meta name="identifier-url"         content="http://bioinfo-pharma.u-strasbg.fr/scPDB/"/>
+    <!-- <script type="text/javascript" src="require/marvin/marvin.js"></script> -->
+    <script type="text/javascript" src="require/javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="require/javascript/javascript.js"></script>
+    <link rel="stylesheet" href="require/style/style.css" type="text/css"> 
+    <link rel="stylesheet" href="require/style/print.min.css" type="text/css" media="print">
+    <link rel="stylesheet" href="require/style/align3.css" type="text/css">
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	</script>
+	
+	<script>
+		ga('create', 'UA-6641238-3', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+</head>
+
+<body>
+    <header>
+        <div id="titlecontainer">
+            <div id="scPDBtitle">
+                <a href="http://bioinfo-pharma.u-strasbg.fr/scPDB/">
+                    <img alt="Logo scPDB" src="require/images/logos/logo_scpdb_min.png">
+                </a>
+                <h1>sc-PDB</h1>
+            </div>
+            <p>An Annotated Database of Druggable Binding Sites from the Protein DataBank</p>
+        </div>
+        <div id="tutelles">
+            <img alt="Logo CNRS" src="require/images/logos/logo_CNRS-filaire_200x200.png">
+            <img alt="Logo Unistra" src="require/images/logos/logo_UMR7200.png">
+        </div>
+    </header>
+	<div class="main" id="mainbox">
+		<a href="#top" id="toTop"></a>
+	</div>
+  
+
+
+<script type="text/javascript" src="require/javascript/jquery.js"></script>
+<script type="text/javascript" src="require/javascript/javascript.js"></script>
+<script type="text/javascript" src="require/javascript/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="require/javascript/highcharts/highcharts-more.js"></script>
+<script type="text/javascript" src="require/javascript/highcharts/modules/exporting.js"></script>
+
+
+<script type="text/javascript" src="require/javascript/ngl-master/dist/ngl.js"></script>
+<link rel="stylesheet" type="text/css" href="require/style/results.css?v=<?time();?>">
+<link rel="stylesheet" href="require/style/sitedata.css">
+<script type="text/javascript">
+	var protpath = "ressources/2016/entries/1a4i_1//protein.mol2";
+	var ligpath = "ressources/2016/entries/1a4i_1//ligand.mol2"; 
+	var sitepath = "ressources/2016/entries/1a4i_1//site.mol2";
+	var cavpath = "ressources/2016/entries/1a4i_1//ints_C.mol2";
+</script>
+<link rel="stylesheet" type="text/css" href="require/style/sitedataplus.css">
+
+<script type="text/javascript">
+<!--
+	$(function () {
+		$('#DISTRIBUTION_CAV').highcharts({
+			chart: {
+	        	polar: true,
+	        	type: 'line'
+	    	},
+	    	title: {
+	        	text: 'Distribution of cavity properties',
+	    	},
+	    	pane: {
+	    		size: '85%'
+	    	},
+	    
+	    	xAxis: {
+	        	categories: ['Hydrophobic', 'Aromatic', 'HBond Acceptor', 'HBond Donor', 'HBond Acceptor/Donor', 'Positive Ionizable','Negative Ionizable','Dummy'],
+	        	tickmarkPlacement: 'on',
+	        	lineWidth: 0,
+				labels: {
+		    		style: {fontWeight:'bold',fontSize:'1.0em'}
+				}
+		    },
+	        
+			yAxis: {
+	        	gridLineInterpolation: 'polygon',
+	        	lineWidth: 0,
+	        	min: 0,
+				max:42.8,
+				labels: {
+					style: {fontWeight:'bold'}
+				}
+	    	},
+	    
+	    	tooltip: {
+	    		shared: true,
+	        	pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}%</b><br/>'
+	    	},
+	    
+	    	legend: {
+		        align: 'center',
+	        	verticalAlign: 'bottom',
+	        	layout: 'horizontal'
+	    	},
+	    
+	    	series: [{
+	        	name: 'scPDB Median',
+	        	data: [37.99,9.28,6.11,13.99,7.69,5.21,4.88,9.69],
+	        	pointPlacement: 'on'
+	    	}, {
+	        	name: '1a4i',
+	        	data: [42.8,9.34,5.84,8.95,7,3.89,1.56,20.62],
+	        	pointPlacement: 'on'
+	    	}]
+	
+		});
+	});
+		
+		
+	$(function () {
+		$('#DISTRIBUTION_LIG').highcharts({
+	        chart: {
+	        	polar: true,
+	        	type: 'line'
+	    	},
+	    	title: {
+	        	text: 'Distribution of ligand properties',
+	    	},
+		    pane: {
+	    		size: '85%'
+	    	},
+	    	xAxis: {
+	        	categories: ['Rings','Aromatic Rings','HBond Acceptor','HBond Donor', 'Rotatable Bonds', 'Positive Ionizable', 'Negative Ionizable','RO5 Violation'],
+	        	tickmarkPlacement: 'on',
+	        	lineWidth: 0,
+				labels: {
+		    		style: {fontWeight:'bold',fontSize:'1.0em'}
+				}
+	    	},
+	    	yAxis: {
+	        	gridLineInterpolation: 'polygon',
+	        	lineWidth: 0,
+	        	min: 0,
+				max:22,
+				labels: {
+		    		style: {
+		    			fontWeight:'bold'
+		    		}
+				}
+	    	},
+	    	tooltip: {
+	    		shared: true,
+	        	pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>'
+	    	},
+	    
+	    	legend: {
+		        align: 'center',
+	        	verticalAlign: 'bottom',
+	        	layout: 'horizontal'
+	    	},
+	    
+	    	series: [{
+	        	name: 'scPDB Median',
+	        	data: [3,2,8,3,7,0,1,1],
+	        	pointPlacement: 'on'
+	    	}, {
+	        	name: '1a4i',
+	        	data: [5,2,22,5,13,0,4,2],
+	        	pointPlacement: 'on'
+	    	}]
+		});
+	});
+	
+	
+	var oTable = $('#tableinter').dataTable({
+	//"ajax":"index.php",
+		"scrollY":        "400px",
+		"scrollCollapse": true,
+		"paging":         false,
+		"aaSorting": [[ 2, "asc" ]],
+		"language": {
+			"info": "Showing _MAX_ interactions",
+		}
+	});
+	 
+	 
+	var selected = [];	 
+
+	var Ligmap = new Object(); Ligmap[9]=0;Ligmap[11]=0;Ligmap[12]=0;Ligmap[26]=0;Ligmap[28]=0;Ligmap[32]=0;Ligmap[42]=0;Ligmap[43]=0;Ligmap[46]=0;Ligmap[47]=0;
+	var Protmap = new Object();Protmap[2275]=0;Protmap[2277]=0;Protmap[2645]=0;Protmap[2649]=0;Protmap[2650]=0;Protmap[2652]=0;Protmap[2671]=0;Protmap[2706]=0;Protmap[2724]=0;Protmap[3019]=0;Protmap[3021]=0;Protmap[3296]=0;Protmap[3308]=0;Protmap[3629]=0;Protmap[8986]=0;	 
+
+
+	$(document).ready(function() {
+    	$('.navSite').attr("data-step","1");
+    	$('.navSite').attr("data-intro",
+		       "Quick menu to go directly to the needed information<br/>\
+		       <table><tr><th style='text-align:right'>PDB Description:</th><td>Information coming from the Protein Data Bank</td></tr>\
+		       <tr><th style='text-align:right'>Binding Site:</th><td>Uniprot Annotation/Chain name and binding site composition</td></tr>\
+		       <tr><th style='text-align:right'>Binding Site Similarity:</th><td>Open a new page with the binding site similarity of this entry agains the whole sc-PDB</td></tr>\
+		       <tr><th style='text-align:right'>Binding Mode:</th><td>Describe the protein/ligand binding mode in 2 and 3 Dimension</td></tr>\
+		       <tr><th style='text-align:right'>Binding Mode Similarity:</th><td>Open a new page with the binding mode similarity of this entry agains the whole sc-PDB</td></tr>\
+		       </table>");
+    	$('#PDBAnnot').attr("data-step","2");
+    	$('#PDBAnnot').attr("data-intro","Entry annotation coming from the Protein Data Bank");
+    
+    	$('#exportOpt').attr("data-step","3");
+    	$('#exportOpt').attr("data-intro","You can download here either protein, ligand, cavity, binding mode, IFP files or all of them");
+    
+	    $('#linkRCSB').attr("data-step","4");
+	    $('#linkRCSB').attr("data-intro","Link to the Protein Data Bank for the entry");
+    
+    
+	    $('#ProtAnnot').attr("data-step","5");
+	    $('#ProtAnnot').attr("data-intro","Description of the binding site, i.e. all residues within 6.5 &Aring; of any heavy ligand atom");
+    
+    	$('#unip').attr("data-step","6");
+    	$('#unip').attr("data-intro","Uniprot Annotation of the protein chain involved in the binding site");
+    
+    
+    	$('.tabAnnot td:eq(2)').attr("data-step","7");
+    	$('.tabAnnot td:eq(2)').attr("data-intro","Link to Uniprot website for this entry");
+    
+    	$('.tabAnnot td:eq(7)').attr("data-step","8");
+    	$('.tabAnnot td:eq(7)').attr("data-intro","Link to the Enzyme Comission website for this entry");
+    
+    	$('#bsitecompos').attr("data-step","9");
+    	$('#bsitecompos').attr("data-intro","Composition of residues within the binding site, including ligandability, cavity volume and hydrophobicity");
+    
+    	$('#DISTRIBUTION_CAV').attr("data-step","10");
+    	$('#DISTRIBUTION_CAV').attr("data-intro","Comparison of physico-chemical properties of the cavity binding site between this entry and all sc-PDB entries");
+    
+    
+    	$('#ligProps').attr("data-step","11");
+    	$('#ligProps').attr("data-intro","Physico-chemical properties of the ligand");
+    
+    	$('#ligPos').attr("data-step","12");
+    	$('#ligPos').attr("data-intro","3-D coordinates of ligand mass center (for docking purposes)");
+   
+    	$('#DISTRIBUTION_LIG').attr("data-step","13");
+    	$('#DISTRIBUTION_LIG').attr("data-intro","Comparison of physico-chemical properties of the ligand between this entry and all sc-PDB entries");
+    	$('#BindMode').attr("data-step","14");
+    	$('#BindMode').attr("data-intro","Describe protein/ligand non-covalent interactions");
+    
+	    $('#listinter').attr("data-step","15");
+	    $('#listinter').attr("data-intro","List protein/ligand interactions with their distance, angle and involved protein ligand atoms");
+    
+    	$('#divBindMode').attr("data-step","16");
+    	$('#divBindMode').attr("data-intro","Binding mode depiction");
+    
+    	$('#3D').attr("data-step","17");
+    	$('#3D').attr("data-intro","You can click on 3D view to toggle to the 3D view of this protein/ligand entry<br/><span style='font-weight:bold;color:red;'>Please click on it to continue</span>");
+    
+    	$('#div3DBindMode').attr("data-step","18");
+    	$('#div3DBindMode').attr("data-intro","You can see the protein ligand binding mode. By mousing over the table on the right you can see interaction on the 3D panel.<br/>By clicking on an interaction in the table panel, you can keep the selected interaction viewed.");
+    } );
+-->
+</script>
+<div class="BOX1-head navSite">
+	<div style="display:inline-block" onclick="$('html,body').animate({scrollTop: $('#PDBAnnot').offset().top}, 'slow'      );">PDB Description</div>
+	<div style="display:inline-block" onclick="$('html,body').animate({scrollTop: $('#ProtAnnot').offset().top}, 'slow'      );">Binding Site</div>
+	<div style="display:inline-block"><a href="DISTSHAP=1a4i_1" target="_blank">Binding Site Similarity</a></div>
+	<div style="display:inline-block"><a href="DISTSHAPC=1a4i_1" target="_blank">Cavity Similarity</a></div>
+	<div style="display:inline-block" onclick="$('html,body').animate({scrollTop: $('#LigAnnot').offset().top}, 'slow'      );">Ligand</div>
+	<div style="display:inline-block" onclick="$('html,body').animate({scrollTop: $('#BindMode').offset().top}, 'slow'      );">Binding Mode</div>
+	<div style="display:inline-block"><a href="DISTGRIM=1a4i_1" target="_blank" >Binding Mode Similarity</a></div>
+</div>
+
+<div class="BOX1" id="PDBAnnot">
+	<div class="BOX1-head">Protein Data Bank Entry:
+    	<div style="float:right;margin-right: 20px"><input type="button" id="exportOpt" class="yelbtn btn" value="EXPORT" onclick="$('#exportentry').toggle(500)">
+    		<input type="button" class="yelbtn btn" value="HELP" onclick="javascript:introJs().start();"/>
+    	</div>
+    </div>
+    <div class="BOX1-body" id="exportentry" style='display: none; text-align: center;padding:20px'>
+		<a href="EXPORTENTRY=PROT=1a4i_1"><input type="button" class="btn fwidth selbtn" value="PROTEIN"/>      </a>
+		<a href="EXPORTENTRY=LIG=1a4i_1"><input type="button" class="btn fwidth selbtn" value="LIGAND"/>       </a>
+		<a href="EXPORTENTRY=SITE=1a4i_1"><input type="button" class="btn fwidth selbtn" value="SITE"/>         </a>
+		<a href="EXPORTENTRY=IFP=1a4i_1"><input type="button" class="btn fwidth selbtn" value="IFP"/>          </a>
+		<a href="EXPORTENTRY=CAVITY=1a4i_1"><input type="button" class="btn fwidth selbtn" value="CAVITY"/>       </a>
+		<a href="EXPORTENTRY=INTS=1a4i_1"><input type="button" class="btn fwidth selbtn" value="INTERACTION"/>  </a>
+		<a href="EXPORTENTRY=ALL=1a4i_1"><input type="button" class="btn fwidth selbtn" value="ALL"/>  </a>
+	</div>
+	<div class="BOX1-body">
+		<input type="hidden" name="id" value="57"/>
+		<div class="Form_Line">
+	    	<div class="InpT"><p><label>PDB ID :    </label><a href="http://www.rcsb.org/pdb/explore/explore.do?structureId=1a4i" target="_blank" id="linkRCSB">1a4i</a>		</p>	</div>
+	    	<div class="InpT"><p><label>Resolution :</label>1.500	&Aring;	</p>	</div>
+		</div>
+		<div class="Form_Line">
+		    <div class="InpT"><p><label>Experimental Method :    </label>X-ray	</p>	</div>
+	    	<div class="InpT"><p><label>Deposition Date :	</label>1998-01-30	</p>	</div>
+		</div>
+    </div>
+</div>
+
+<div class="BOX1" id="ActAnnot" style="display: none;">
+    <div class="BOX1-head">
+		Activity from <a href="https://www.ebi.ac.uk/chembl/">ChEMBL:</a>
+		<span style="font-style: italic;font-weight: bold;float:right;margin-right: 5px;cursor: pointer" onclick="$('#pChem').toggle();">What is pChEMBL ?</span>
+    </div>
+    <div class="BOX1-body">
+		<table id="actTable">
+	    	<thead><tr><th></th><th>Min</th><th>Mean</th><th>Median</th><th>Standard Deviation</th><th>Max</th><th>Count</th></thead>
+	    	<tbody><tr><th>pChEMBL:</th></tr></tbody>
+		</table>
+		<hr/>
+		<div style="width:100%;text-align: center;">
+			<span style="font-weight: bold;">List of CHEMBLId : </span><br/><br/>
+			<table id="TableID" style="width:100%;">
+	  			<tbody><tr></tr></tbody>
+			</table><br/><br/>
+		</div>
+		<div id="pChem" style="display: none;margin:5%;text-align: justify">
+	    This value allows a number of roughly comparable measures of half-maximal response concentration/potency/affinity
+	    to be compared on a negative logarithmic scale (e.g., an IC50 measurement of 1nM would have a pChEMBL value of 9).
+	    </div>
+    </div>
+</div>
+<!--
+<div class="flexCategory">
+	<div class="flexCatHead">Keywords
+	</div>
+	<div class="flexCatBody">
+		 <div class="flexContainer">
+			 <div class="flexContHead">uniprot keywords</div>
+			 <div class="flexContBody"></div>
+		</div>
+	</div>
+</div>		
+-->
+
+<div class="flexCategory" >
+	<div class="flexCatHead">Interactomes:
+	</div>
+	<div class="flexCatBody">
+		<div class="flexContainer">
+		    <div class="flexContHead"><a href="https://string-db.org/"><img src="require/images/logos/logo_String.png" ></a> </div>
+			<div class="flexContBody"><a href="http://string-db.org/newstring_cgi/show_network_section.pl?identifier=P11586" target="_blank">Interactome scPDB Proteins-Proteins <img src='require/images/external-ltr.png'></a></div> 
+	    </div>
+	    <div class="flexContainer">
+			<div class="flexContHead"><a href="http://stitch.embl.de/"><img src="require/images/logos/logo_Stitch.png"></a></div>
+			<div class="flexContBody"><a href="http://stitch.embl.de/cgi/show_network_section.pl?identifier=P11586" target="_blank">Interactome scPDB Proteins-Ligands <img src='require/images/external-ltr.png'></a></div>
+	    </div>
+        <div class="flexContainer">
+            <div class="flexContHead"><a href="http://stitch.embl.de/"><img src="require/images/logos/logo_Stitch.png"></a></div>
+            <div class="flexContBody"><a href="http://stitch.embl.de/cgi/show_network_section.pl?identifier=DB02338" target="_blank">Interactome scPDB Ligands-Proteins <img src='require/images/external-ltr.png'></a></div>
+        </div>
+	
+	</div>
+</div>
+
+<form method="post" action="RESULTS" id="molform">
+<div class="flexCategory" >
+		<div class="flexCatHead">Molecular Function:</div>
+		<div class="flexCatBody">
+			<div class="flexContainer">
+				<div class="flexContBody"><div class="upkw"><input class="upkwsubmit" type="submit" onclick="$('#showSite')" value="Hydrolase" name="PROTDATA_KEYWORDS"/></div><div class="upkw"><input class="upkwsubmit" type="submit" onclick="$('#showSite')" value="Ligase" name="PROTDATA_KEYWORDS"/></div><div class="upkw"><input class="upkwsubmit" type="submit" onclick="$('#showSite')" value="Multifunctional enzyme" name="PROTDATA_KEYWORDS"/></div><div class="upkw"><input class="upkwsubmit" type="submit" onclick="$('#showSite')" value="Oxidoreductase" name="PROTDATA_KEYWORDS"/></div></div>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+<div class="BOX1" id="ProtAnnot">
+    <div class="BOX1-head">
+		Binding Site :
+    </div>
+    <div class="BOX1-body" style="text-align: center; min-height: 400px;height: 1350px;">
+		<br/>
+		<div id="unip">
+			<h4>Uniprot Annotation</h4>
+			<table class="tabAnnot">
+				<tr><th style="text-align:right"> Name:</th><td style="color:#717400">C-1-tetrahydrofolate synthase, cytoplasmic</td></tr><tr><th style="text-align:right"> ID:</th><td><a href="http://www.uniprot.org/uniprot/C1TC_HUMAN" target="_blank">C1TC_HUMAN</a></td></tr><tr><th style="text-align:right"> AC:</th><td><a href="http://www.uniprot.org/uniprot/P11586" target="_blank">P11586</a></td></tr><tr><th style="text-align:right">Organism:</th><td>Homo sapiens</td></tr><tr><th style="text-align:right">Reign:</th><td>Eukaryota</td></tr><tr><th style="text-align:right">TaxID:</th><td><a href="http://www.uniprot.org/taxonomy/9606" target="_blank">9606</a></td></tr><tr><th style="text-align:right">EC Number:</th><td><a href="http://enzyme.expasy.org/EC/1.5.1.5" target="_blank">1.5.1.5</a></td></tr>
+			</table>
+			<br/>
+			<hr style="width:30%;"/>
+	    	<h4>Chains:</h4>
+	    	<table  class="tabAnnot">
+				<thead>
+		    		<tr><th style="width:50%">Chain Name:</th><th style="width:50%">Percentage of Residues<br/> within binding site</th></tr>
+		    	</thead>
+				<tbody>
+		    		<tr><td style="font-weight:bold;color:#717400">A</td><td>94 %</td></tr><tr><td style="font-weight:bold;color:#717400">B</td><td>6 %</td></tr>
+				</tbody>
+	    	</table>
+	    </div>
+	    <br/>
+	    <div id="bsitecompos">
+	    	<hr style="width:30%;"/>
+	    	<h4>Ligand binding site composition:</h4>
+	    	<table style="width:100%;">
+				<tr><th class="hname">B-Factor:</th><td>17.784</td></tr>
+				<tr><th class="hname">Number of residues:</th><td>36</td></tr>
+				<tr><td class="hname ita" colspan="2">Including</td></tr>
+				<tr><th class="hname">Standard Amino Acids:		</th><td>35</td></tr>
+				<tr><th class="hname">Non Standard Amino Acids:	</th><td>0</td></tr>
+				<tr><th class="hname">Water Molecules:		</th><td>1</td></tr>
+				<tr><th class="hname">Cofactors:		</th><td></td></tr>
+				<tr><th class="hname">Metals:			</th><td></td></tr>
+	    	</table>
+	    	<hr style="width:30%;"/>
+	    	<h4 style="text-align: center">Cavity properties</h4>
+	    	<table style="width:100%;text-align: center">
+				<tr><th style="width:50%">Ligandability</th><th>Volume (&Aring;<span class="sup">3</span>)</th></tr>
+				<tr><td>1.329</td><td>867.375</td></tr>
+		
+		    </table><br/>
+	    	<table style="width:100%;text-align: center;margin-bottom: 8px;">
+				<tr><th style="width:50%">% Hydrophobic</th><th>% Polar</th></tr>
+				<tr><td>52.14</td><td>47.86</td></tr>
+				<tr style="font-style: italic"><td colspan="2"><a href="http://dx.doi.org/10.1021/ci300184x" target="_blank">According to VolSite</a></td></tr>
+	    	</table>
+	    <br/>
+	    </div>
+	    <div id="DISTRIBUTION_CAV" style="height:430px;width:90%;margin-left:4%"></div>
+    </div>
+</div>
+
+<div class="BOX1" id="LigAnnot">
+    <div class="BOX1-head">
+	Ligand :
+    </div>
+    
+    <div class="BOX1-body" style="min-height: 730px;height: 1350px;">
+		<div style="width:100%;text-align: center"><img style="width:300px;text-align:center"  src="ressources/2016/entries/1a4i_1/ligand.png" alt="1a4i_1 Structure"/></div>
+		<div id="ligProps">
+			<table style="height:160px;width:100%">
+	    		<tr><th style="text-align:right">HET Code:			</th><td>NDP </td></tr>
+	    		<tr><th style="text-align:right">Formula:			</th><td>C21H26N7O17P3 </td></tr>
+	    		<tr><th style="text-align:right">Molecular weight:		</th><td>741.389 g/mol </td></tr>
+				<tr><th style="text-align:right">DrugBank ID:			</th><td><a href="https://www.drugbank.ca/drugs/DB02338">DB02338</a></td></tr>
+	    		<tr><th style="text-align:right">Buried Surface Area:</th><td>49.44 %</td></tr>
+	    
+	    		<tr><th style="text-align:right">Polar Surface area:		</th><td>404.9 &Aring;<span class="sup">2</span> </td></tr>
+			</table>
+			<table style="height:284px;width:100%">
+	    		<tr><th style="text-align:center;padding-top:10px" colspan="2">Number of</th></tr>
+	    		<tr><th style="text-align:right;width:55%">H-Bond Acceptors:	</th><td>22 </td></tr>
+	    		<tr><th style="text-align:right">H-Bond Donors:	</th><td>5 </td></tr>
+	    		<tr><th style="text-align:right">Rings:		</th><td>5 </td></tr>
+	    		<tr><th style="text-align:right">Aromatic rings:	</th><td>2 </td></tr>
+	    		<tr><th style="text-align:right">Anionic atoms:	</th><td>4 </td></tr>
+	    		<tr><th style="text-align:right">Cationic atoms:	</th><td>0 </td></tr>
+	    		<tr><th style="text-align:right">Rule of Five Violation:	</th><td>2 </td></tr>
+	    		<tr><th style="text-align:right">Rotatable Bonds:	</th><td>13 </td></tr>
+			</table>
+		</div>
+		<div id="ligPos">
+			<hr style="width:30%;"/>
+	    	<h4 style="text-align: center">Mass center Coordinates</h4>
+	    	<table style="width:100%;text-align: center">
+				<tr><th>X</th><th>Y</th><th>Z</th></tr>
+				<tr><td>-4.1874</td><td>48.6166</td><td>27.9495</td></tr>
+			</table>
+	    </div>
+        <div id="DISTRIBUTION_LIG" style="height:430px;width:90%;margin-left:4%"></div>
+    </div>
+</div>
+
+<br/><br/>
+<!--
+ ##################################################################################################################################################################
+ ##################################################################################################################################################################
+ -->
+<div class="BOX1" id="BindMode"  >
+    <div class="BOX1-head">
+		Binding mode :
+		<div style="float:right;margin-right: 20px"><a href="EXPORTINTS=1a4i_1" target="_blank"><input type="button" class="yelbtn btn" value="EXPORT"></a></div>
+		<span id="poseview" onclick="$('#hydeLegend').toggle();">What is Poseview ?</span>
+    </div>
+
+    <div id="bbody" class="BOX1-body">
+		<div id="bmleft">
+			<!-- ################### -->
+            <ul id="onglets">
+                <li class="active"><span onclick="document.getElementById( 'divBindMode' ).style.display = 'block'; document.getElementById( 'divBindMode2' ).style.display = 'none'; $('#onglets li:eq(0)').addClass('active');$('#onglets li:eq(1)').removeClass('active'); " id="2D"> 2D View </span></li>
+                <li><span onclick="document.getElementById( 'divBindMode' ).style.display = 'none'; document.getElementById( 'divBindMode2' ).style.display = 'block'; $('#onglets li:eq(0)').removeClass('active');$('#onglets li:eq(1)').addClass('active'); stage.handleResize();" id="3D"> 3D View </span></li>
+            </ul>
+			<!-- ################### -->
+            <div id="divBindMode">
+                <img alt="Binding mode" style="width:100%;max-width:450px;margin:1%;" src="ressources/2016/entries/1a4i_1/poseview.png"/>
+				<div>
+	                <img id="logoBioSolveIT" alt="BioSolveIT" src="./require/images/logos/logo_BioSolveIT.png" style="width: 35px;"/>
+		            <span style="vertical-align: top;">Image generated by PoseView</span>
+				</div>
+            </div>
+			<!-- ################### -->
+			<div id="divBindMode2">
+	            <div id="viewport"></div>
+<!--	            <div id="alignbar" style="visibility: 'hidden';"> -->
+				<div id="alignbar">
+	                <div class="toglrow">
+		                <div class="toglfield">Protein</div>
+				        <div class="toglimg" style="background-color: #808588;">
+					        <img id="ref_prot" class="toglbtn" src="require/images/ngl/eye.png">
+						</div>
+	                </div>
+		            <div class="toglrow">
+			            <div class="toglfield">Binding Site</div>
+					    <div class="toglimg">
+ 						    <img id="ref_site" class="toglbtn" src="require/images/ngl/eye.png">
+	                    </div>
+		            </div>
+			        <div class="toglrow">
+				        <div class="toglfield">Ligand</div>
+<!--					    <div class="toglcolor" style="background-color: #27C4BE;"></div> -->
+						<div class="toglimg" style="background-color: #27C4BE;">
+ 								<img id="ref_lig" class="toglbtn" src="require/images/ngl/eye.png">
+		                </div>
+			        </div>
+				    <div class="toglrow">
+					    <div class="toglfield">Interaction pattern</div>
+<!--						<div class="toglcolor" style="background-color: #27C4BE;"></div> -->
+	                    <div class="toglimg">
+		                    <img id="ref_bsm" class="toglbtn" src="require/images/ngl/eyenot.png">
+			            </div>
+				    </div>
+					<div id="toglpattern">
+						<div class="toglrow2"><div class="toglfield2">hydrophobic (CA)</div><div class="toglcolor2" style="background-color: #808588;"></div></div>
+						<div class="toglrow2"><div class="toglfield2">aromatic (CZ)</div><div class="toglcolor2" style="background-color: #FFDE00;"></div></div>
+						<div class="toglrow2"><div class="toglfield2">hydrogen bond acceptor (O)</div><div class="toglcolor2" style="background-color: #DD000B;"></div></div>
+						<div class="toglrow2"><div class="toglfield2">hydrogen bond acceptor/donor (OG)</div><div class="toglcolor2" style="background-color: #65019C;"></div></div>
+						<div class="toglrow2"><div class="toglfield2">hydrogen bond donor (N)</div><div class="toglcolor2" style="background-color: #0349DF;"></div></div>
+						<div class="toglrow2"><div class="toglfield2">positively ionized (NZ)</div><div class="toglcolor2" style="background-color: #012570;"></div></div>
+						<div class="toglrow2"><div class="toglfield2">negatively ionized (OD1)</div><div class="toglcolor2" style="background-color: #920007;"></div></div>
+						<div class="toglrow2"><div class="toglfield2">metal (ZN)</div><div class="toglcolor2" style="background-color: #000000;"></div></div>
+					</div>
+<!--
+					<span class="Text" style="display: inline-block; vertical-align: middle; width: 120px;">fogFar</span>
+					<input class="Range" min="0.00" max="100" step="1.00" type="range">
+-->
+	            </div>
+			</div>
+			<div id="hydeLegend">
+				<h3>Legend:</h3>
+				<p>
+				Represent the protein/ligand binding mode, centered on the ligand<br/>
+				Dashed lines represents hydrogen bonds and metal interactions<br/>
+				Green residue labels for amino acids with hydrophobic contacts (green lines) to the ligand<br/>
+				</p>
+				<span style="font-style: italic"><a href="http://www.biosolveit.de/poseview/" target="_blank">Image generated using PoseView by BioSolveIT<br/><img id="logoBioSolveIT" alt="BioSolveIT" src="./require/images/logos/logo_BioSolveIT.png" style="width: 70px;"/></a></span>
+			</div><br/><br/>
+		</div>
+		<div id="bmright">
+			<div id="listinter" >
+            <table style="width:100%;text-align: center" id="tableinter">
+                <thead>
+                    <tr style="text-align: center"><th>Ligand</th><th colspan="2">Protein</th><th colspan="3">Interaction</th><th style="display: none"></th></tr>
+                    <tr style="text-align: center"><th>Atom</th><th>Atom</th><th>Residue</th><th style="width:20%">Distance<br/> (&Aring;)</th><th style="width:15%">Angle (&#176;)</th><th>Type</th><th style="display: none"></th></tr>
+                </thead>
+                <tbody><tr style="height:35px"><td>C4N</td><td>CB</td><td>THR-  148</td><td>4.29</td><td>0</td><td>Hydrophobic<td style="display:none" id="int1">false</tr>
+<tr style="height:35px"><td>C5N</td><td>CG2</td><td>THR-  148</td><td>4.49</td><td>0</td><td>Hydrophobic<td style="display:none" id="int2">false</tr>
+<tr style="height:35px"><td>O3B</td><td>N</td><td>ARG-  173</td><td>2.85</td><td>161.41</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int3">false</tr>
+<tr style="height:35px"><td>O1X</td><td>NH2</td><td>ARG-  173</td><td>2.91</td><td>147.73</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int4">false</tr>
+<tr style="height:35px"><td>O2X</td><td>NE</td><td>ARG-  173</td><td>2.86</td><td>169.21</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int5">false</tr>
+<tr style="height:35px"><td>O1X</td><td>CZ</td><td>ARG-  173</td><td>3.68</td><td>0</td><td>Ionic <br/>(Protein Cationic)<td style="display:none" id="int6">false</tr>
+<tr style="height:35px"><td>O2X</td><td>CZ</td><td>ARG-  173</td><td>3.64</td><td>0</td><td>Ionic <br/>(Protein Cationic)<td style="display:none" id="int7">false</tr>
+<tr style="height:35px"><td>O2N</td><td>OG</td><td>SER-  174</td><td>2.6</td><td>129.81</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int8">false</tr>
+<tr style="height:35px"><td>C5N</td><td>CG2</td><td>ILE-  176</td><td>4.33</td><td>0</td><td>Hydrophobic<td style="display:none" id="int9">false</tr>
+<tr style="height:35px"><td>C5N</td><td>CG2</td><td>VAL-  177</td><td>3.6</td><td>0</td><td>Hydrophobic<td style="display:none" id="int10">false</tr>
+<tr style="height:35px"><td>O2B</td><td>N</td><td>SER-  197</td><td>3.3</td><td>143.81</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int11">false</tr>
+<tr style="height:35px"><td>O1X</td><td>N</td><td>SER-  197</td><td>3.16</td><td>146.69</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int12">false</tr>
+<tr style="height:35px"><td>O1X</td><td>OG</td><td>SER-  197</td><td>2.55</td><td>158.9</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int13">false</tr>
+<tr style="height:35px"><td>C5D</td><td>CB</td><td>ALA-  215</td><td>4.14</td><td>0</td><td>Hydrophobic<td style="display:none" id="int14">false</tr>
+<tr style="height:35px"><td>C1B</td><td>CG2</td><td>THR-  216</td><td>4.02</td><td>0</td><td>Hydrophobic<td style="display:none" id="int15">false</tr>
+<tr style="height:35px"><td>O3D</td><td>N</td><td>ILE-  238</td><td>3.05</td><td>174.39</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int16">false</tr>
+<tr style="height:35px"><td>O2N</td><td>O</td><td>HOH-  314</td><td>2.82</td><td>152.79</td><td>H-Bond <br/>(Protein Donor)<td style="display:none" id="int17">false</tr>
+</tbody>
+            </table>
+			</div>
+		</div>
+	</div>
+
+</div>
+<br/>
+<!--
+<div class="BOX1" id="Cluster" style="display: none;" style="display:none">
+    <div class="BOX1-head">
+		Binding site cluster:
+		<div id="gotoCluster"><a href="CLUSITE=" target="_blank">GO TO CLUSTER</a></div>
+    </div>
+    <div class="BOX1-body" style="text-align: center">
+		<br/>
+		
+	</div>
+</div>
+<br/>
+-->
+
+
+<br/><br/>
+<script type="text/javascript">
+    function assignElement (elemid,properties) {
+        Object.assign(elemid, properties)
+    }
+
+    var stage = new NGL.Stage("viewport");
+            
+    window.addEventListener( "resize", function( event ){
+        stage.handleResize();
+		
+    }, false );
+
+
+    stage.viewer.setBackground( 0xFFFFFF );
+	stage.setParameters( { fogNear: 52 } );
+	stage.setParameters( { fogFar: 55 } );
+
+    var RefLigSchemeId = NGL.ColormakerRegistry.addScheme(function (params) {
+        this.atomColor = function (atom) {
+            if (atom.element == 'C' ) {
+                return 0x27C4BE
+            } else if (atom.element == 'N' ) {
+                return 0x0000FF
+            } else if (atom.element == 'O' ) {
+                return 0xFF0000
+            } else if (atom.element == 'H' ) {
+                return 0xFFFFFF
+            } else if (atom.element == 'S' ) {
+                return 0xFFFC1E
+            } else if (atom.element == 'Cl' ) {
+                return 0x005B00  // green
+            } else if (atom.element == 'F' ) {
+                return 0x005B00  // green
+            } else if (atom.element == 'Br' ) {
+                return 0x005B00  // green
+            } else if (atom.element == 'I' ) {
+                return 0x005B00  // green
+            } else {
+                return 0xCCCCCC  // green
+            }
+        };
+    });
+    var RefSiteSchemeId = NGL.ColormakerRegistry.addScheme(function (params) {
+        this.atomColor = function (atom) {
+            if (atom.element == 'C' ) {
+                return 0x808588
+            } else if (atom.element == 'N' ) {
+                return 0x0000FF
+            } else if (atom.element == 'O' ) {
+                return 0xFF0000
+            } else if (atom.element == 'H' ) {
+                return 0xFFFFFF
+            } else if (atom.element == 'S' ) {
+                return 0xFFFC1E
+            } else if (atom.element == 'Cl' ) {
+                return 0x005B00  // green
+            } else if (atom.element == 'F' ) {
+                return 0x005B00  // green
+            } else if (atom.element == 'Br' ) {
+                return 0x005B00  // green
+            } else if (atom.element == 'I' ) {
+                return 0x005B00  // green
+            } else {
+                return 0xCCCCCC  // green
+            }
+        };
+    });
+    var RefBSMSchemeId = NGL.ColormakerRegistry.addScheme(function (params) {
+        this.atomColor = function (atom) {
+			if (atom.atomname == 'CA') {
+				return 0x808588
+            } else if (atom.atomname == 'CZ') {
+				return 0xFFDE00
+            } else if (atom.atomname == 'O') {
+				return 0xDD000B
+            } else if (atom.atomname == 'OG') {
+				return 0x65019C
+            } else if (atom.atomname == 'N') {
+				return 0x0349DF
+            } else if (atom.atomname == 'OD1') {
+				return 0x920007
+            } else if (atom.atomname == 'NZ') {
+				return 0x012570
+            } else if (atom.atomname == 'ZN') {
+				return 0x000000
+            }
+        };
+    });
+
+	function toggleimg(eid) {
+		var imgid = document.getElementById( eid );
+		var bsmlegend = document.getElementById('toglpattern');
+/*		var bsmlegend = document.getElementsByClassName('bsmlegend');		*/
+		if (imgid.getAttribute('src') == "require/images/ngl/eye.png") {
+			imgid.src = "require/images/ngl/eyenot.png";
+			if (eid == 'ref_bsm') {
+				bsmlegend.style.display = 'none';
+			}
+		}
+		else {
+			imgid.src = "require/images/ngl/eye.png";
+            if (eid == 'ref_bsm') {
+                bsmlegend.style.display = 'flex';
+            }
+
+		}
+	}
+    function moleculeLoad(elementid, rept, repo, molpath, molec){
+        var molecu = molec
+        var buttonid = document.getElementById( elementid );
+
+        var buttonprop = {
+            type: 'button',
+            value: 'toggle Comp. Protein',
+            onclick: function (e) {
+                molecu.toggleVisibility()
+				toggleimg(elementid)
+            }
+        }
+        assignElement(buttonid, buttonprop)
+
+        stage.loadFile(molpath).then(function (o) {
+            molecu = o.addRepresentation(rept, repo)
+            if (elementid == 'ref_lig'){
+                o.autoView()
+            }
+        })
+    };
+    var rrprot;
+    var rrlig;
+    var rrsite;
+    var rrbsm;
+
+    var wholerep = [
+/*        [ "ref_prot", "cartoon", { color: 0x3A69CD }, protpath, rrprot ],*/
+        [ "ref_prot", "cartoon", { color: 0x808588 }, protpath, rrprot ],
+        [ "ref_site", "line", { sele: "not hydrogen", color: RefSiteSchemeId, linewidth: 2 }, sitepath, rrsite ],
+        [ "ref_lig", "ball+stick", { sele: "not hydrogen", color: RefLigSchemeId }, ligpath, rrlig ], 
+        [ "ref_bsm", "ball+stick", { opacity: 0.8, color: RefBSMSchemeId, visible: false }, cavpath, rrbsm ]
+    ]
+    moleculeLoad(wholerep[0][0], wholerep[0][1], wholerep[0][2], wholerep[0][3], wholerep[0][4]);
+    moleculeLoad(wholerep[1][0], wholerep[1][1], wholerep[1][2], wholerep[1][3], wholerep[1][4]);
+    moleculeLoad(wholerep[2][0], wholerep[2][1], wholerep[2][2], wholerep[2][3], wholerep[2][4]);
+    moleculeLoad(wholerep[3][0], wholerep[3][1], wholerep[3][2], wholerep[3][3], wholerep[3][4]);
+</script>
+ 
+  
+
+
+
+		<script type="text/javascript">
+            $(function() {
+                $("#toTop").scrollToTop(1000);
+            });
+    </script>
+    <footer>
+        <img alt="powered by chemaxon" src="require/images/logos/logo_chemaxon_poweredby_M.png">
+        <img alt="biosolveit" src="require/images/logos/logo_biosolveit.png">
+        <img alt="ChEMBL" src="require/images/logos/logo_Chembl.png">
+    </footer>
+	</body>
+	</html>

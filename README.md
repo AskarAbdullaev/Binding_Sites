@@ -341,6 +341,19 @@ triggered after 3 non-improving epochs.
 <img width="1189" height="1180" alt="hp_grid" src="https://github.com/user-attachments/assets/9d3adb90-198e-44c2-b151-efb3077b9702" />
 
 
+## Cross-Validation
+
+TBA
+(Here I will run 5-fold CV for voxel sizes [1, 2] for 3DCNN and linear regression as a baseline. Then I will compare them and choose the best performing model. When the best model is chosen, it will be retrained on the complete data)
+
+## Domain-Specific Results
+
+TBA
+(As I have the sparate test set, not intersectig with CV data, I will test the resulting model with DCC and DVO metrics. When ready, I can compare it to DeepSite results and FPocket results)
+
+## Conclusion and Discussion
+
+TBA
 
 ## References
 

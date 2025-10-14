@@ -1,12 +1,14 @@
 import os
 from typing import Collection
 from collections import Counter
+from itertools import product
 
 import pandas as pd
 import numpy as np
 
 from tqdm import tqdm
 from matplotlib import pyplot as plt
+from matplotlib.patches import Patch
 
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -183,7 +185,9 @@ def precompute_voxel_grids(list_of_entries: Collection[str],
 
             in_voxel = np.floor(coordinates / voxel_size).astype('int')
             excluded_volume[in_voxel[0], in_voxel[1], in_voxel[2]] = 1
-            update_window = int(np.ceil(radius / 0.6)) // voxel_size
+            effective_distance = 3 * radius
+            update_window = 1 + (int(effective_distance - voxel_size /2) // voxel_size)
+            update_window = int(np.ceil(np.ceil(radius / 1.26) / voxel_size))
 
             # Update window span
             dx = (np.arange(update_window * 2 + 1) + in_voxel[0] - update_window) * voxel_size + 0.5 * voxel_size
@@ -233,6 +237,150 @@ def precompute_voxel_grids(list_of_entries: Collection[str],
 
     print(f'True size of generated files: {format_size(true_size)}')
     print(f'Entries skipped as existing: {skipped_existing}')
+
+
+def visualize_voxels(scpdb_id: str,
+                     channels: Collection[str] = 'all',
+                     show_binding_site: bool = True,
+                     voxel_size: int = 1,
+                     database_path: str = 'Data/database.csv',
+                     voxels_dir: str = 'Data/Voxels',
+                     scpdb_dir: str = 'Data/scPDB',
+                     dpi: int = 300,
+                     title: bool = True,
+                     zoom: int = 0,
+                     save: str = None):
+    """
+    Allows to visualize a protein voxels
+
+    Args:
+        scpdb_id (str): entry to visualize
+        channels (Collection[str], optional): channels to show. Defaults to {'Positive Ionizable', 'Negative Ionizable', 'Hydrophobic', 'Aromatic', 'Donor', 'Acceptor', 'Metal'}.
+        voxel_size (int, optional): choose the voxel size. Defaults to.
+        show_binding_site (bool, optional): also highlight the binding site. Defaults to True.
+        database_path (str, optional): path to the main database. Defaults to 'Data/database.csv'.
+        atoms_dir (str, optional): path to the folder with atom CSVs. Defaults to 'Data/Atoms'.
+        scpdb_dir (str, optional): path to the original scPDB folder. Defaults to 'Data/scPDB'.
+        dpi (int, optional): resoluion. Defaults to 300.
+        title (bool, optional): allows to turn off the title. Defaults to True.
+        zoom (int, optional): allows to zoom in the plot. Defaults to 0.
+        save (str, optional): path to save the plot to if any. Defaults to None.
+    """
+    
+    # Check the input
+    assert isinstance(database_path, str), f'database_path must be str, not {type(database_path)}'
+    assert isinstance(scpdb_id, str), f'scpdb_id must be str, not {type(scpdb_id)}'
+    assert isinstance(dpi, int), f'dpi must be int, not {type(dpi)}'
+    assert isinstance(zoom, int), f'zoom must be int, not {type(zoom)}'
+    assert isinstance(voxel_size, int), f'voxel_size must be int, not {type(voxel_size)}'
+    assert isinstance(voxels_dir, str), f'atoms_dir must be str, not {type(voxels_dir)}'
+    assert isinstance(scpdb_dir, str), f'scpdb_dir must be str, not {type(scpdb_dir)}'
+    assert isinstance(show_binding_site, bool), f'show_binding_site must be bool, not {type(show_binding_site)}'
+    assert isinstance(title, bool), f'title must be bool, not {type(title)}'
+    assert isinstance(save, None | str), f'save must be None or str, not {type(save)}'
+    assert isinstance(voxel_size, int), f'voxel_size must be int, not {type(voxel_size)}'
+    assert voxel_size in {1, 2}, f'voxel_size can be 1 or 2, not {voxel_size}'
+    assert isinstance(channels, Collection), f'channels must be a Collection, not {type(channels)}'
+    possible_channels = ['Positive Ionizable', 'Negative Ionizable', 'Hydrophobic', 'Aromatic', 'Donor', 'Acceptor', 'Metal']
+    if channels == 'all':
+        channels = possible_channels
+        channels_ids = list(range(8))
+    else:
+        for channel in channels:
+            assert channel in possible_channels, f'unknown channel "{channel}", consider: {possible_channels}'
+        channels_ids = [possible_channels.index(channel) for channel in channels]
+
+    channel_colours = {'Positive Ionizable': 'blue', 'Negative Ionizable': 'red', 'Hydrophobic': 'grey', 'Aromatic': 'darkgrey', 'Donor': 'lightblue', 'Acceptor': 'pink', 'Metal': 'orange'}
+    
+    atoms_grid = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'atoms_grid.npy'))
+    occupancy = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'occupancy.npy'))
+
+    atoms = DECODER[atoms_grid].astype('float32')
+    atoms[:,:,:,:-1] = atoms[:,:,:,:-1] * occupancy[..., None]
+    centroid = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'site_center.npy'))
+    in_site = np.zeros_like(occupancy)
+
+    if show_binding_site:
+        site = open(os.path.join(scpdb_dir, scpdb_id, 'site.mol2'), 'r').read().split('@')[2]
+        site_atoms = []
+        for atom in site.split('\n')[1:-1]:
+            x, y, z = list(filter(lambda x: x, atom.split(' ')))[2:5]
+            site_atoms.append([float(x), float(y), float(z)])
+        site_atoms = pd.DataFrame(site_atoms, columns=['X', 'Y', 'Z'])
+        old_centroid = np.array(site_atoms[['X', 'Y', 'Z']].mean())
+        shift = centroid - old_centroid
+        for _, atom in site_atoms.iterrows():
+            x = int(atom['X'] + shift[0]) // voxel_size
+            y = int(atom['Y'] + shift[1]) // voxel_size
+            z = int(atom['Z'] + shift[2]) // voxel_size
+            in_site[x-1:x+2, y-1:y+2, z-1:z+2] = 1
+
+    # Plot
+    fig = plt.figure(dpi=dpi)
+    ax = fig.add_subplot(projection='3d')
+
+    # The following block is needed to make atom sizes look correct
+    bbox = ax.get_window_extent().transformed(ax.figure.dpi_scale_trans.inverted())
+    width_inch = bbox.width
+    xrange = atoms.shape[0]
+    points_per_angstrom = width_inch * 72 / (2 * xrange)
+
+    all_triples = list(product(list(range(8, atoms.shape[0]-8)), list(range(8, atoms.shape[1]-8)), list(range(8, atoms.shape[2]-8))))
+    all_triples = sorted(all_triples, key=lambda x: (x[0] - atoms.shape[0])**2 + (x[1] - atoms.shape[1])**2 + (x[2] - atoms.shape[2])**2, reverse=True)
+
+    # plot every atom according to its properties, if show_binding_site, then also add borders to 
+    # atoms, that are parts of a binding site
+    for x, y, z in all_triples:
+
+        if atoms[x, y, z, -1] == 1:
+
+            ax.scatter(x, y, z, marker='h', facecolor='lightgreen', alpha=0.1,
+                        s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2)
+
+        for channel, channel_id in zip(channels, channels_ids):
+            if atoms[x, y, z, channel_id] > 10 ** (-3):
+                ax.scatter(x, y, z, marker='h', color=channel_colours[channel],
+                            alpha=atoms[x, y, z, channel_id],
+                            s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2,
+                            edgecolors = None if show_binding_site and in_site[x, y, z] == 0 else 'black',
+                            linewidths = 0 if show_binding_site and in_site[x, y, z] == 0 else 0.3)
+                ax.scatter(x, y, z, marker='1', color='black',
+                            alpha=atoms[x, y, z, channel_id],
+                            linewidth = 0 if show_binding_site and in_site[x, y, z] == 0 else 0.3,
+                            s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2)
+
+    # Add the legend with channel colours
+    legend = [
+        Patch(facecolor=color, edgecolor='k', label=name)
+        for name, color in channel_colours.items() if name in channels
+    ]
+    ax.legend(handles=legend,
+            title="Chemical Channels\n(border indicates that voxel\nbelongs to the binding site)",
+            loc="upper left",
+            frameon=True,
+            fontsize=int(dpi/30),
+            title_fontsize=int(dpi/25))
+
+    # Set reasinable limits
+    ax.set_xlim(8+zoom, atoms.shape[0]-8-zoom)
+    ax.set_ylim(8+zoom, atoms.shape[1]-8-zoom)
+    ax.set_zlim(8+zoom, atoms.shape[2]-8-zoom)
+
+    # Turn off the grid and add a title
+    ax.grid(False)
+    ax.set_box_aspect([1,1,1])
+
+    if not title:
+        ax.set_axis_off()
+    if title:
+        ax.set_title(f'Entry {scpdb_id}, channels shown: {", ".join(channels)}', fontsize=int(dpi/20))
+    if save is not None:
+        fig.savefig(save)
+    plt.show()
+
+
+
+
 
 
 def get_samples_by_id(scpdb_id: str,
@@ -288,6 +436,7 @@ def get_samples_by_id(scpdb_id: str,
     atoms_grid = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'atoms_grid.npy'))
     occupancy = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'occupancy.npy'))
     centroid = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'site_center.npy'))
+
 
     # Get subgrid size and sliding window stride
     sub_grid_size = 16 // voxel_size

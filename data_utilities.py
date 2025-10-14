@@ -2,6 +2,8 @@ import requests
 import os
 import time
 import random
+import importlib
+import sys
 
 from typing import Collection
 from collections import Counter
@@ -16,6 +18,7 @@ from bs4 import BeautifulSoup
 from matplotlib import pyplot as plt
 from matplotlib.patches import Patch
 
+
 ###########################################################
 # This module is meant to facilitate preliminary steps:
 #
@@ -26,6 +29,35 @@ from matplotlib.patches import Patch
 #   - briefly analyse the data
 #   - perform the first preprocessing and visualization
 ###########################################################
+
+
+
+def print_dependencies():
+    """
+    Helper function to print the used dependencies
+    """
+
+    modules = [
+        "requests", "pandas", "numpy", "regex", "tqdm",
+        "bs4", "matplotlib", "torch", "sklearn"
+    ]
+
+    print(" Dependencies ".center(35, '-'))
+    print(f"Python version: {sys.version.split()[0]}")
+    print("-" * 35)
+
+    for m in modules:
+        try:
+            mod = importlib.import_module(m)
+            version = getattr(mod, "__version__", None)
+            if version is None and m == "bs4":
+                import bs4
+                version = getattr(bs4, "__version__", "unknown")
+            print(f"{m:<12}: {version if version else 'builtin / unknown'}")
+        except Exception as e:
+            print(f"{m:<12}: not installed ({e.__class__.__name__})")
+
+    print("-" * 35)
 
 
 def format_size(size: float | int):
@@ -575,7 +607,8 @@ def parse_scpdb_source_code(entry: str,
 def parse_scPDB_pages(list_of_pages: Collection[str] = None,
                       pages_dir: str = 'Data/Pages',
                       output_path: str = 'Data/database.csv',
-                      scope_path: str = 'Data/SCOPe/2_08.csv') -> tuple[pd.DataFrame, pd.DataFrame]:
+                      scope_path: str = 'Data/SCOPe/2_08.csv',
+                      skip: bool = False) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Parses source codes of scPDB weg pages and creates a dataframe. (Plus: a dataframe of entries which produced errors during parsing)
 
@@ -618,6 +651,9 @@ def parse_scPDB_pages(list_of_pages: Collection[str] = None,
     # Report
     print('Parsing scPDB web pages')
     print(f'Entries provided (from {pages_dir if from_dir else "provided list"}): {len(list_of_pages)}')
+    if skip:
+        print('Parsing is skipped')
+        return
 
     # Iterate through pages
     for page in tqdm(list_of_pages, desc='Parsing Source Pages...', total=len(list_of_pages)):
@@ -771,6 +807,7 @@ def split_dataset(database_path: str,
                   folds_dir: str = 'Data/Folds',
                   test_fraction: float = 0.25,
                   n_folds: int = 10,
+                  skip: bool = False,
                   seed: int = 1234) -> pd.DataFrame:
     """
     Allows to split the data (provided through database_path) into a test set and
@@ -831,6 +868,9 @@ def split_dataset(database_path: str,
     print(f'IDs for final testing: {len(ids_for_final_testing)} (total={len(all_uniprot_ids)})')
     print(f'IDs for CV: {len(ids_for_cv)} (total={len(all_uniprot_ids)})')
     print(f'IDs per fold: {ids_per_fold} (total={len(ids_for_cv)})')
+    if skip:
+        print('Split is skipped')
+        return
 
     # Shuffle the IDs
     ids_for_cv = np.random.permutation(sorted(ids_for_cv))
@@ -947,9 +987,9 @@ def get_atoms_properties(database_path: str,
     
     for scpdb_id in tqdm(current_database['scPDB ID'], desc='Preprocessing mol2 files...'):
 
-        if os.path.isfile(os.path.join(atoms_dir, scpdb_id + '.csv')) and exist_ok:
-            skipped_existing += 1
-            continue
+        # if os.path.isfile(os.path.join(atoms_dir, scpdb_id + '.csv')) and exist_ok:
+        #     skipped_existing += 1
+        #     continue
 
         # Read protein.mol2 and site.mol2 files
         protein_file = open(os.path.join(scpdb_dir, scpdb_id, 'protein.mol2')).read()
@@ -958,6 +998,10 @@ def get_atoms_properties(database_path: str,
         # Get Atoms and Bonds
         protein_atoms, protein_bonds = protein_file.split('@')[2], protein_file.split('@')[3]
         site_atoms, site_bonds = site_file.split('@')[2], site_file.split('@')[3]
+
+        if os.path.isfile(os.path.join(atoms_dir, scpdb_id + '.csv')) and exist_ok:
+            skipped_existing += 1
+            continue
 
         # Identify Hydrogen Neighbours
         oxygen_ids = set(re.findall(r'\n\s{1,7}([0-9]{1,6})\s{1,3}O', protein_atoms))
@@ -1085,17 +1129,39 @@ def visualize_channels(scpdb_id: str,
                        database_path: str = 'Data/database.csv',
                        atoms_dir: str = 'Data/Atoms',
                        scpdb_dir: str = 'Data/scPDB',
-                       dpi: int = 300):
+                       dpi: int = 300,
+                       title: bool = True,
+                       zoom: int = 0,
+                       save: str = None):
+    """
+    Allows to visualize a protein atoms
+
+    Args:
+        scpdb_id (str): entry to visualize
+        channels (Collection[str], optional): channels to show. Defaults to {'Positive Ionizable', 'Negative Ionizable', 'Hydrophobic', 'Aromatic', 'Donor', 'Acceptor', 'Metal'}.
+        atoms_alpha (float, optional): opacity of background atoms. Defaults to 0.1.
+        show_binding_site (bool, optional): also highlight the binding site. Defaults to True.
+        database_path (str, optional): path to the main database. Defaults to 'Data/database.csv'.
+        atoms_dir (str, optional): path to the folder with atom CSVs. Defaults to 'Data/Atoms'.
+        scpdb_dir (str, optional): path to the original scPDB folder. Defaults to 'Data/scPDB'.
+        dpi (int, optional): resoluion. Defaults to 300.
+        title (bool, optional): allows to turn off the title. Defaults to True.
+        zoom (int, optional): allows to zoom in the plot. Defaults to 0.
+        save (str, optional): path to save the plot to if any. Defaults to None.
+    """
     
     # Check the input
     assert isinstance(database_path, str), f'database_path must be str, not {type(database_path)}'
     assert isinstance(scpdb_id, str), f'scpdb_id must be str, not {type(scpdb_id)}'
     assert isinstance(atoms_alpha, float | int), f'atoms_alpha must be float or int, not {type(atoms_alpha)}'
     assert isinstance(dpi, int), f'dpi must be int, not {type(dpi)}'
+    assert isinstance(zoom, int), f'zoom must be int, not {type(zoom)}'
     assert isinstance(atoms_dir, str), f'atoms_dir must be str, not {type(atoms_dir)}'
     assert isinstance(scpdb_dir, str), f'scpdb_dir must be str, not {type(scpdb_dir)}'
     assert isinstance(show_binding_site, bool), f'show_binding_site must be bool, not {type(show_binding_site)}'
     assert isinstance(channels, Collection), f'channels must be Collection, not {type(channels)}'
+    assert isinstance(title, bool), f'title must be bool, not {type(title)}'
+    assert isinstance(save, None | str), f'save must be None or str, not {type(save)}'
     possible_channels = {'Positive Ionizable', 'Negative Ionizable', 'Hydrophobic', 'Aromatic', 'Donor', 'Acceptor', 'Metal'}
     for channel in channels:
         assert channel in possible_channels, f'unknown channel "{channel}", consider: {possible_channels}'
@@ -1136,17 +1202,21 @@ def visualize_channels(scpdb_id: str,
     xrange = atoms_csv['X'].max() - atoms_csv['X'].min() + 10
     points_per_angstrom = width_inch * 72 / (2 * xrange)
 
+
     # plot every atom according to its properties, if show_binding_site, then also add borders to 
     # atoms, that are parts of a binding site
+    atoms_csv['view_point'] = (atoms_csv['X'].max() - atoms_csv['X']) ** 2 + (atoms_csv['Y'].max() - atoms_csv['Y']) ** 2 + (0 -atoms_csv['Z']) ** 2
+    atoms_csv = atoms_csv.sort_values(by='view_point', ascending=False)
+
     for i, row in atoms_csv.iterrows():
 
         ax.scatter(row['X'], row['Y'], row['Z'], marker='o', facecolor='lightgreen', alpha=atoms_alpha,
-                    s = (vdw_radii[row['Element']] * points_per_angstrom) ** 2)
+                    s = (vdw_radii[row['Element']] * (1 + zoom // 3) * points_per_angstrom) ** 2)
 
         for channel in channels:
             if row[channel] == 1:
                 ax.scatter(row['X'], row['Y'], row['Z'], marker='o', color=channel_colours[channel],
-                s = (vdw_radii[row['Element']] * points_per_angstrom) ** 2,
+                s = (vdw_radii[row['Element']] * (1 + zoom // 3) * points_per_angstrom) ** 2,
                 edgecolors = None if show_binding_site and row['Site'] != True else 'black',
                 linewidths = 0 if show_binding_site and row['Site'] != True else 0.3)
 
@@ -1163,11 +1233,18 @@ def visualize_channels(scpdb_id: str,
             title_fontsize=int(dpi/25))
 
     # Set reasinable limits
-    ax.set_xlim(atoms_csv['X'].min() - 5, atoms_csv['X'].max() + 5)
-    ax.set_ylim(atoms_csv['Y'].min() - 5, atoms_csv['Y'].max() + 5)
-    ax.set_zlim(atoms_csv['Z'].min() - 5, atoms_csv['Z'].max() + 5)
+    ax.set_xlim(atoms_csv['X'].min() + zoom, atoms_csv['X'].max() - zoom)
+    ax.set_ylim(atoms_csv['Y'].min() + zoom, atoms_csv['Y'].max() - zoom)
+    ax.set_zlim(atoms_csv['Z'].min() + zoom, atoms_csv['Z'].max() - zoom)
 
     # Turn off the grid and add a title
     ax.grid(False)
-    ax.set_title(f'Entry {scpdb_id}, channels shown: {", ".join(channels)}', fontsize=int(dpi/20))
+    ax.set_box_aspect([1,1,1])
+
+    if not title:
+        ax.set_axis_off()
+    if title:
+        ax.set_title(f'Entry {scpdb_id}, channels shown: {", ".join(channels)}', fontsize=int(dpi/20))
+    if save is not None:
+        fig.savefig(save)
     plt.show()

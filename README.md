@@ -320,6 +320,27 @@ self.model = torch.nn.Sequential(
 
 ## Hyperparameters Search
 
+Although the model architecture is based on the DeepSite model, the amount of training
+data is significantly less in this research. Thus, it is required to perform a search for
+new hyperparameters. The computational complexity of the procedure made me limit
+the search to the following grid:
+
+- Batch Size: 128 or 256
+- Dropout Rate: 0, 0.1 or 0.25
+- Channel Size Multiplier: x1 or x2
+  
+For the search I only use a single fold with the maximum number of epochs equal to
+100 and an early stopping triggered after 5 epochs without test loss improvement. The
+optimizer is Adam [17], loss function is binary cross-entropy, positive weight is set to 1.
+The grid search takes 35 hours on 12-core CPU (2023). The results for each run can be
+seen in Figure 2. As visible in the plot, the lowest test loss is reached for the batch size 128, 0 dropout rate
+and 16x2 channels multiplier. The epoch at which the best loss is reached is 8. However,
+to account for variance in folds, I will set the maximum epochs to 15 with early stopping
+triggered after 3 non-improving epochs.
+
+<img width="1189" height="1180" alt="hp_grid" src="https://github.com/user-attachments/assets/9d3adb90-198e-44c2-b151-efb3077b9702" />
+
+
 
 ## References
 

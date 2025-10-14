@@ -18,6 +18,71 @@ For this project I used the following modules:
 | torch          | 2.4.1   |
 | sklearn        | 1.4.2   |
 
+## File structure
+
+```text
+./
+|
+|- all_scpdb_entries.txt (list of all scPDB entries as of Sep.'25)
+|- excluded_scpdb_entries.txt (entries that are filtered out during preprocessing)
+|- decode.npy (decoder of atom properties)
+|
+|- data_utilities.py (utilities for the 'load_and_process' notebook)
+|- load_and_process.ipynb (notebook for data loading and preprocessing)
+|
+|- sample_and_train_utilities.py (utilities for sample_and_train' notebook)
+|- sample_and_train.ipynb (notebook for voxelization, sampling and hyperparameters search)
+|
+|- Data 
+    |
+    |- scPDB
+        |- 1a2b_1
+            |- protein.mol2
+            |- site.mol2
+            |- ...(other possible files from scPDB)
+        |- ...(all scPDB entries)
+    |
+    |- SCOPe
+        |- 2_08.csv
+        |- ...(possibly other SCOPe versions)
+    |
+    |- Pages
+        |- 1a2b_1.txt
+        |- ...(all the source codes of scPDB web pages)
+    |
+    |- Folds
+        |- 1.csv
+        |- ...(other folds)
+        |- test.csv
+    |
+    |- Atoms
+        |- 1a2b_1.csv
+        |- ...(csvs with atom coords and props)
+    |
+    |- Voxels
+        |- 1
+            |- 1a2b_1
+                |- atoms_grid.npy
+                |- occupancy.npy
+                |- site_center.npy
+            |- ... (other voxelized entries with voxel size 1)
+        |
+        |- 2
+            |- 1a2b_1
+                |- atoms_grid.npy
+                |- occupancy.npy
+                |- site_center.npy
+            |- ... (other voxelized entries with voxel size 2)
+    |
+    |- CV
+        |- pilot (folder for hyperparameter search)
+            |- bs_128_do_0_cs_1
+                |- train_loss.txt
+                |- test_loss.txt
+                |- true_labels.npy
+                |- predictions.npy
+            |- ... (other hyperparameter combinations)
+```
 
 ## Introduction
 

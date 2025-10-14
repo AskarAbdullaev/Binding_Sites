@@ -1,0 +1,352 @@
+Uniprot ID,Main,scPDB IDs,Count
+PYRD_PLAF7,5fi8_1,"['5fi8_1', '1tv5_1', '3i6r_1', '3i68_1', '3o8a_1']",5
+KIF4_MOUSE,3zfd_1,['3zfd_1'],1
+PLK2_HUMAN,4i6f_1,"['4i6f_1', '4i6h_1']",2
+YAHA_ECOLI,4lj3_1,['4lj3_1'],1
+PILT_PSEAE,3jvv_2,['3jvv_2'],1
+A8JI83_CHLRE,4usj_3,['4usj_3'],1
+HLDD_ECO57,2x86_3,"['2x86_3', '2x86_7']",2
+GSHR_PLAFK,1onf_1,['1onf_1'],1
+AROK_MYCTO,4bqs_2,['4bqs_2'],1
+TOC33_ARATH,3bb3_1,['3bb3_1'],1
+CPRC2_CANPA,4h8n_2,['4h8n_2'],1
+BPHD_BURXL,3v1n_1,"['3v1n_1', '3v1m_1', '2puh_1', '2rht_1', '2puj_1']",5
+A9KN57_CLOPH,5dbv_1,"['5dbv_1', '4c3s_1']",2
+GH109_ELIME,2ixa_1,"['2ixa_1', '2ixb_1']",2
+CARM1_MOUSE,2v74_1,['2v74_1'],1
+Y284_PYRHO,2dr3_4,['2dr3_4'],1
+UPPS_ECOLI,2e9a_1,"['2e9a_1', '1x09_2', '2e99_1', '4h3c_2', '2e9d_1', '4h38_1', '3sh0_2', '2e98_1', '2e9c_4', '3th8_1', '3sgx_1', '3sgv_1']",12
+C9Z6T8_STRSW,5ewk_1,['5ewk_1'],1
+B0YPL1_BACCE,4bmo_1,['4bmo_1'],1
+CARM1_RAT,3b3f_2,['3b3f_2'],1
+HTPG_ECOLI,2ior_1,"['2ior_1', '1y4s_2']",2
+VRAS_STAAM,4gt8_1,['4gt8_1'],1
+ADAM8_HUMAN,4dd8_4,['4dd8_4'],1
+GST_PLAF7,2aaw_1,['2aaw_1'],1
+Q0ZQ43_9ACTN,3sma_1,['3sma_1'],1
+FCL_HUMAN,4b8w_1,"['4b8w_1', '4b8z_8', '4e5y_2', '4b8z_7', '4b8w_4', '4bl5_3']",6
+PUR4_SALTY,4l78_1,['4l78_1'],1
+Q5SJV7_THET8,2z08_1,['2z08_1'],1
+GUAD_HUMAN,4aql_1,['4aql_1'],1
+GNAS2_BOVIN,2gvd_2,"['2gvd_2', '1cul_2', '1cs4_3', '1azt_2', '1u0h_3', '3c15_2', '3c14_2', '3c16_2']",8
+Q26490_SPOFR,1fml_2,"['1fml_2', '1fmj_1', '1x8l_2']",3
+Q8IIS0_PLAF7,3ko5_1,"['3ko5_1', '3ko3_1', '4nbj_2', '4nbi_2']",4
+Q4KCZ0_PSEF5,5dbj_1,['5dbj_1'],1
+AROE_CORGL,3jyq_1,"['3jyq_1', '3jyp_1', '3jyo_1']",3
+CRPL_MYCTU,3mzh_3,"['3mzh_3', '3i59_2', '3i59_1']",3
+ERV2_YEAST,1jra_4,"['1jra_4', '1jr8_2']",2
+ATPB_RAT,1mab_2,['1mab_2'],1
+LDHA_RAT,4ajo_1,"['4ajo_1', '4al4_4', '4ajn_2', '4ajj_3', '4aj2_1']",5
+ATS1_HUMAN,2jih_1,['2jih_1'],1
+U1LRQ3_ASCSU,5c2t_1,"['5c2t_1', '4ytn_3', '5c3j_3']",3
+Q5SH33_THET8,2cul_1,['2cul_1'],1
+TYPH_SALTY,4yek_1,['4yek_1'],1
+Q9SLP6_MAIZE,3w5u_3,"['3w5u_3', '1gaq_1', '1gaw_1']",3
+Q60AU8_METCA,4o9k_2,['4o9k_2'],1
+ENGB_BACSU,1svw_2,['1svw_2'],1
+GRIA3_RAT,3rt8_1,"['3rt8_1', '4f3g_1', '4f1y_1', '4f31_2']",4
+SDHA_PIG,4yxd_2,"['4yxd_2', '3sfd_2', '3aeb_2', '3sfe_2', '3ae4_2']",5
+CARP_CRYPA,2jjj_1,"['2jjj_1', '3t6i_2', '4y35_1', '4y4j_1', '1e80_1', '2v00_1', '3pww_1', '4y3j_1', '3pm4_1', '3t7x_1', '3pll_1', '1gvt_1', '2jji_1', '3t6i_1', '1e81_1', '3pgi_1', '3pbz_1', '4y3z_1', '3t7q_1', '3pb5_1', '3pmu_1', '3pi0_1', '3t7p_1', '4y38_1', '4y3q_1', '1gvw_1', '4zea_1', '1e82_1', '3pmy_1', '4y45_1', '4yd7_1', '4y57_1', '1gvv_1', '4y3r_1', '1od1_1', '3prs_1', '3pld_1', '3psy_1']",38
+FAAH1_RAT,4do3_1,['4do3_1'],1
+IMDH_PYRHO,2cu0_1,['2cu0_1'],1
+Q90HG9_9HIV1,2fxd_1,['2fxd_1'],1
+O33199_MYCTO,1mqw_1,"['1mqw_1', '1mqe_1', '1mk1_1']",3
+Q93LY7_9ACTN,2qa1_1,"['2qa1_1', '4icy_1']",2
+Y1459_PYRHO,3ih0_1,"['3ih0_1', '3gbu_2']",2
+A5H660_SCHMA,4bz7_3,"['4bz7_3', '4bz8_3']",2
+ERYK_SACEN,3zkp_1,['3zkp_1'],1
+RABP1_BOVIN,2cbr_1,['2cbr_1'],1
+RLMH_STAAU,4fak_1,['4fak_1'],1
+L7MTK8_SPOFR,4h0n_3,['4h0n_3'],1
+AAK1_HUMAN,4wsq_1,['4wsq_1'],1
+A7Z474_BACVZ,5d2e_1,['5d2e_1'],1
+CP46A_HUMAN,4enh_1,"['4enh_1', '3mdm_1', '3mdv_1', '2q9f_1']",4
+FGFR2_HUMAN,5eg3_1,"['5eg3_1', '3b2t_1', '4j99_1', '1oec_1', '4j97_3', '2pz5_2', '4j98_1', '2pzp_2', '4j95_1', '2py3_1', '3cly_1', '2pvy_1', '2q0b_1', '2pwl_2', '2pzr_1']",15
+MK07_HUMAN,4ic7_1,"['4ic7_1', '4b99_1']",2
+ARD1_SCHPO,4kvx_1,"['4kvx_1', '4kvm_3']",2
+E2QJP6_ECOLX,4dy4_1,['4dy4_1'],1
+NMRL1_HUMAN,2wm3_1,"['2wm3_1', '2wmd_1']",2
+A3DDA2_CLOTH,3eey_1,['3eey_1'],1
+C7Q5P8_CATAD,5d1n_1,"['5d1n_1', '5bw4_2']",2
+COBT_SALTY,1l4m_2,"['1l4m_2', '1l4g_2', '1l4k_2', '1jha_1', '1l5m_1', '1l4e_1', '1l4h_2', '1l5l_1', '1l5o_2', '4kqg_1', '1jho_1', '1l4f_2', '1jhq_1', '1d0v_1', '1jhr_2', '1l4l_2', '1l5k_1']",17
+SMYD3_HUMAN,5ex0_1,"['5ex0_1', '3ru0_2', '3oxf_2', '3pdn_1', '5hq8_2', '3qwp_1']",6
+HSP83_TRYBB,3opd_1,['3opd_1'],1
+Q5FT75_GLUOX,3wbw_1,['3wbw_1'],1
+MMP8_HUMAN,1mnc_1,"['1mnc_1', '1zs0_1', '2oy2_1', '1zvx_1', '1bzs_1']",5
+PRP43_YEAST,2xau_1,['2xau_1'],1
+A0QYW6_MYCS2,5ahw_5,['5ahw_5'],1
+DHAS_PSEAE,5bnt_2,['5bnt_2'],1
+ILVB_ARATH,3e9y_3,"['3e9y_3', '3ea4_2']",2
+FABH_ENTFA,3il6_1,"['3il6_1', '3il5_4', '3il4_4']",3
+Q8DVV9_STRMU,3ihk_3,['3ihk_3'],1
+Q97ML2_CLOAB,5kf1_1,"['5kf1_1', '5kgp_1', '5kf1_2', '5kf2_1', '5kgj_2', '5kf8_2', '5kf9_2', '5kf2_2', '5kf8_1', '5kf9_1', '5kgh_3']",11
+MET16_HUMAN,2h00_2,['2h00_2'],1
+NAA40_HUMAN,4u9v_1,['4u9v_1'],1
+A7YKL0_9HIV1,3dok_1,"['3dok_1', '3dmj_1', '3dol_1']",3
+Q7SSI0_9HIV1,2nnk_1,"['2nnk_1', '2nnp_1', '3oxc_1', '4kb9_1', '2ieo_1', '2nmy_1', '3s56_1', '2hs2_1', '2i4u_1', '3s54_1', '2hb3_1', '2idw_1', '2hs1_1']",13
+RAC7_ARATH,2j0v_4,['2j0v_4'],1
+C3T5M2_ECOLX,4gek_2,['4gek_2'],1
+Q6E7K0_9CYAN,5doz_3,['5doz_3'],1
+SFM1_YEAST,5c77_1,['5c77_1'],1
+Q5KST5_PSEFR,2ztl_3,"['2ztl_3', '2ztv_4', '2ztu_3', '2ztm_1']",4
+Q81UT5_BACAN,3icr_3,"['3icr_3', '3ics_4', '3ict_1', '3icr_2', '3ict_5', '3ics_2', '3ict_2', '3ics_3']",8
+KCC2B_HUMAN,3bhh_2,['3bhh_2'],1
+ADAS_DICDI,2uuv_4,['2uuv_4'],1
+A4ZPY8_CHRVL,4jn9_2,"['4jn9_2', '4nte_2']",2
+O33839_THEMT,3o0o_6,"['3o0o_6', '3o0o_4', '1xje_1', '3o0q_3', '1xjk_2', '1xjg_2', '1xjj_1', '1xjn_4', '3o0q_2', '1xjk_3', '1xjm_2', '1xjn_6', '3o0o_1', '3o0n_1', '1xje_4']",15
+RAC1_HUMAN,4gzm_2,"['4gzm_2', '3th5_1', '3sbe_1', '1i4l_1', '2p2l_2', '4gzl_1', '1mh1_1', '3sbd_2', '2fju_1', '1e96_1']",10
+S10AD_HUMAN,2kot_2,['2kot_2'],1
+DCYD_SALTY,4d9f_5,"['4d9f_5', '4d96_1', '4d9e_4']",3
+S14L2_HUMAN,1olm_2,['1olm_2'],1
+AVR4_CHICK,1y52_1,"['1y52_1', '4bcs_2', '2fhn_2', '2fhl_1']",4
+B0RM05_XANCB,4kg1_1,['4kg1_1'],1
+STRAA_HUMAN,2wtk_1,['2wtk_1'],1
+CSK22_HUMAN,3ofm_1,['3ofm_1'],1
+AROG_ECOLI,1kfl_6,['1kfl_6'],1
+Q9J006_9HIV1,4njs_2,"['4njs_2', '4njt_2', '4nju_2', '4njv_1', '4rvj_2']",5
+GSTA2_MOUSE,1ml6_1,['1ml6_1'],1
+Q9YCJ0_AERPE,3vqr_1,"['3vqr_1', '3axb_1']",2
+F1RQI7_PIG,4pk4_1,"['4pk4_1', '4pjj_1', '4pfp_1']",3
+Q5GYJ8_XANOR,3lps_1,['3lps_1'],1
+GLDA_GEOSE,1jq5_1,['1jq5_1'],1
+Q9L6V3_RHOCA,2bgj_3,"['2bgj_3', '2vnh_1', '2vnk_5', '2vnj_2', '2vnj_1', '2bgi_1', '4k1x_2']",7
+VGP_EBOZM,5jqb_1,['5jqb_1'],1
+YQJG_ECOLI,4g0k_1,['4g0k_1'],1
+A5K4U6_PLAVS,3ryw_2,"['3ryw_2', '3rbm_1', '3ez3_2', '3ldw_2', '3ez3_3', '3ldw_1']",6
+GNA1_HUMAN,2o28_1,['2o28_1'],1
+SRPK2_HUMAN,2x7g_1,['2x7g_1'],1
+DDL_YERPE,5bpf_1,"['5bpf_1', '5c1p_1', '5c1o_1']",3
+FTSY_THEAQ,2q9c_1,"['2q9c_1', '1rj9_1']",2
+Q9HK51_THEAC,2dte_2,['2dte_2'],1
+FLAV_AZOVI,1yob_1,['1yob_1'],1
+DYR_PNECA,1e26_1,"['1e26_1', '1klk_1', '4ixf_1', '1ly3_1', '2cd2_1', '3cd2_1', '1cd2_1', '1ly4_1', '1dyr_1', '3td8_1', '4ixg_1', '1s3y_1', '4ixe_1', '4cd2_1', '2fzi_1', '2fzh_1', '4g8z_1', '1daj_1', '1vj3_1']",19
+IOLG_BACSU,3nt2_2,"['3nt2_2', '3ntq_2', '3nt5_2', '3nt2_1', '3nt4_1', '3ntr_2', '4l8v_4']",7
+TAGD_BACSU,1coz_2,"['1coz_2', '1n1d_2']",2
+Q8YHT7_BRUME,4ira_1,['4ira_1'],1
+CDC7_HUMAN,4f9c_1,"['4f9c_1', '4f99_1', '4f9b_2', '4f9a_1']",4
+O59312_PYRHO,3abi_1,['3abi_1'],1
+Q8RLY5_LACHE,1s2g_3,['1s2g_3'],1
+O26771_METTH,3fpf_1,"['3fpf_1', '3fpj_1']",2
+Q9FBC5_STREE,2z6i_1,"['2z6i_1', '2z6j_1']",2
+Q5SM42_THET8,3anp_1,"['3anp_1', '3ang_4']",2
+KEAP1_HUMAN,4iqk_1,"['4iqk_1', '3vnh_1', '4in4_3', '4ifn_1']",4
+Q1QZR8_CHRSD,5dm3_5,['5dm3_5'],1
+Q93TX2_STIAU,4u7w_1,['4u7w_1'],1
+MER_METBF,1z69_4,['1z69_4'],1
+C3SQJ7_ECOLX,4n9i_4,['4n9i_4'],1
+PRGR_HUMAN,4apu_2,"['4apu_2', '1e3k_2', '3zr7_1', '1sr7_1', '4apu_1', '3zrb_1', '2ovh_1', '2w8y_1', '1sqn_1', '1zuc_1', '3zra_2', '2w8y_2', '3d90_1', '3zrb_2', '4a2j_2', '2ovm_1']",16
+QUEF_BACSU,4fgc_2,['4fgc_2'],1
+P73495_SYNY3,4i4z_1,"['4i4z_1', '4i52_5']",2
+Q92PC0_RHIME,4dna_2,['4dna_2'],1
+O29536_ARCFU,2bb3_2,['2bb3_2'],1
+MENC_ECOLI,1r6w_1,['1r6w_1'],1
+Q0K312_CUPNH,3wmx_2,['3wmx_2'],1
+C7YVL8_NECH7,4cmf_1,['4cmf_1'],1
+Q53119_RHOSH,4hh0_2,"['4hh0_2', '2bun_1', '1yrx_3']",3
+Q4QC75_LEIMA,4uxj_6,['4uxj_6'],1
+Y241_ARCFU,2nv4_2,['2nv4_2'],1
+4HBT_ARTSP,3r3d_1,"['3r3d_1', '1q4t_1', '3r3c_1', '3r3b_1', '3r35_1', '1q4u_1', '3r32_1', '3r34_1', '3r37_2', '3r3f_1', '3tea_1']",11
+BODG_HUMAN,3ms5_1,['3ms5_1'],1
+Q9KLB0_VIBCH,3nz2_5,['3nz2_5'],1
+Q88H32_PSEPK,1u7h_1,"['1u7h_1', '1x7d_2']",2
+MK03_HUMAN,2zoq_1,['2zoq_1'],1
+Q6YI95_MESCR,3c3y_1,['3c3y_1'],1
+PAR15_HUMAN,3gey_1,"['3gey_1', '3v2b_1', '4f0e_1']",3
+NAPE_ENTFA,1nhs_1,"['1nhs_1', '1joa_1', '1npx_1', '1f8w_1', '2npx_1', '1nhp_1', '1nhq_1', '2npx_2', '1nhr_1']",9
+E7F650_DANRE,4bj8_13,['4bj8_13'],1
+AK1C4_HUMAN,2fvl_3,['2fvl_3'],1
+KRE2_YEAST,1s4o_2,"['1s4o_2', '1s4p_2']",2
+D0AB09_LEIDO,2wuu_1,['2wuu_1'],1
+RAB9A_MOUSE,4qxa_1,['4qxa_1'],1
+Q82SE2_NITEU,2rc3_4,['2rc3_4'],1
+Q93AT8_DICCH,2x3j_2,"['2x3j_2', '2w02_2', '2w03_2']",3
+Q9RM86_CLOAM,3qdq_1,['3qdq_1'],1
+TYSY_HUMAN,1i00_1,"['1i00_1', '1juj_1', '1hvy_1', '3hb8_1', '1ju6_4']",5
+GRP78_HUMAN,3ldp_1,"['3ldp_1', '5f2r_1', '3ldo_1', '3ldl_1', '5f1x_1']",5
+Q9C3Y6_NEUCS,3hji_1,"['3hji_1', '2pd7_1', '3is2_2', '2pdt_2', '2pd8_1', '3hjk_1']",6
+Q8ZJW4_SALTY,2cns_1,"['2cns_1', '2cnt_1']",2
+TYTR_TRYCR,1bzl_1,"['1bzl_1', '1gxf_2']",2
+FABP2_AMBME,2ft9_2,['2ft9_2'],1
+ACT1_DROME,3mn9_1,"['3mn9_1', '3eks_1', '3el2_1', '3eku_2', '4rwt_1', '4jhd_4', '3eku_1', '3mn7_1', '4m63_1', '3eks_2', '3mn6_3']",11
+O66264_9CELL,3qfz_2,['3qfz_2'],1
+Q4W2K4_VITVI,3i6i_1,"['3i6i_1', '3i6q_1']",2
+PCKG_MYCTU,4r43_1,['4r43_1'],1
+Q9HVI8_PSEAE,4rnh_1,['4rnh_1'],1
+PYL1_ARATH,3neg_2,"['3neg_2', '3kdj_1', '3nef_1', '3nmn_2']",4
+Q57329_YERPU,1rkx_2,['1rkx_2'],1
+KITH_EHV4,1p72_1,"['1p72_1', '1p6x_1']",2
+KITH_HHV11,3vtk_1,"['3vtk_1', '1e2l_2', '1e2k_2', '1e2n_2', '4ivq_1', '4ivr_1', '1p7c_1', '1e2j_2', '4jbx_2']",9
+CRYD_ARATH,2vtb_4,"['2vtb_4', '2j4d_1', '2vtb_10', '2ijg_2', '2j4d_3']",5
+Q9V2L3_PYRAB,2qen_1,['2qen_1'],1
+THIL_HUMAN,2f2s_2,"['2f2s_2', '2iby_2', '2ibu_2', '2ibw_1']",4
+KIF1A_MOUSE,2zfi_1,['2zfi_1'],1
+Q46E80_METBF,4j49_3,"['4j49_3', '4j4b_1', '4jk3_1', '4j43_2', '4j49_2', '4j49_1']",6
+Q1D4I1_MYXXD,5hwp_1,"['5hwp_1', '5hwr_1', '5hwq_1', '5hwo_1']",4
+VGFR1_HUMAN,3hng_1,['3hng_1'],1
+XIAP_HUMAN,3clx_3,"['3clx_3', '4hy0_4']",2
+SAR1_YEAST,1m2o_2,"['1m2o_2', '2qtv_1']",2
+Q8IM71_PLAF7,3fi8_1,['3fi8_1'],1
+ARK72_MOUSE,2c91_6,['2c91_6'],1
+RECQ1_HUMAN,2v1x_1,['2v1x_1'],1
+Q5MBU7_ASPFM,4ntc_1,['4ntc_1'],1
+O93077_9HEPC,1z4u_1,"['1z4u_1', '1yvf_1']",2
+ATPA_BOVIN,2jj1_4,"['2jj1_4', '4asu_2', '1nbm_1']",3
+G2IN91_9SPHN,4y9d_1,['4y9d_1'],1
+O92103_9HIV1,1c70_1,['1c70_1'],1
+Q5SJ05_THET8,2cy2_1,['2cy2_1'],1
+NADM_METTH,4yp5_1,"['4yp5_1', '1ej2_1', '1m8k_3', '1m8g_1', '4yp6_2', '1m8j_1', '4yp7_1']",7
+RIR1_YEAST,3tb9_1,"['3tb9_1', '2cvy_1', '2eud_2', '3tb9_2', '3s8c_1', '3rsr_1', '2cvu_2', '3tba_2', '2cvu_1', '3k8t_2', '2eud_1', '2cvv_1', '3s87_2', '2cvw_1', '3s8a_1', '3k8t_1', '3s87_1', '3s8c_2', '2cvw_2', '2cvx_1']",20
+Q9ZWP8_VIGRA,4psb_1,"['4psb_1', '2flh_5']",2
+Q0P8G4_CAMJE,2cic_1,['2cic_1'],1
+KTHY_VIBCH,3n2i_2,['3n2i_2'],1
+PK3CD_MOUSE,4ajw_1,['4ajw_1'],1
+NAMPT_HUMAN,4o1b_2,"['4o1b_2', '4m6q_1', '4kfn_2', '4o28_2', '4lvg_2', '2gvj_1', '4lww_1', '4m6p_1', '4kfp_2', '2gvg_3', '4o1d_1', '4lva_1', '4kfo_2', '4jr5_1', '4lvb_1', '4lts_2', '4jnm_2']",17
+Q67PI3_SYMTH,3wbf_1,"['3wbf_1', '3wbb_3']",2
+ADPPT_HUMAN,2c43_1,"['2c43_1', '2cg5_1']",2
+A2E7Y6_TRIVA,2isc_6,"['2isc_6', '2i4t_2']",2
+Q9ZWQ6_ADICA,1g28_2,['1g28_2'],1
+Q8TZS9_PYRFU,2i14_3,['2i14_3'],1
+Q8T6B1_PLAFA,2b4t_1,"['2b4t_1', '1ywg_2', '2b4r_1', '2b4r_4']",4
+DAPD_UNKP,3tdt_1,"['3tdt_1', '1kgq_1']",2
+O29598_ARCFU,2oap_2,['2oap_2'],1
+Q8I4S1_PLAF7,2yof_1,"['2yof_1', '2yoh_2', '2yog_2']",3
+P96762_ENTGA,3tdw_1,"['3tdw_1', '3tdv_2']",2
+Q7MBY8_VIBVY,3uce_2,['3uce_2'],1
+GLGA1_RHIRD,1rzu_2,['1rzu_2'],1
+Q5SHF6_THET8,5fl3_1,['5fl3_1'],1
+DOT1L_HUMAN,3qow_1,"['3qow_1', '3sr4_1', '4er6_1', '1nw3_1', '4er7_1', '4ek9_1', '4eki_1', '4ekg_1']",8
+U5HK48_HAECO,4krh_2,['4krh_2'],1
+LKHA4_YEAST,2xq0_1,['2xq0_1'],1
+Q4QCD2_LEIMA,3kfl_1,['3kfl_1'],1
+DCE1_HUMAN,3vp6_1,['3vp6_1'],1
+XYNB_PAEBA,3emz_1,['3emz_1'],1
+BLVRB_HUMAN,1hdo_1,['1hdo_1'],1
+Q9HGR1_PODAS,4ymg_1,['4ymg_1'],1
+APA2_YEAST,4i5v_1,['4i5v_1'],1
+MDH_ARCFU,2x0i_1,['2x0i_1'],1
+CTRA_BOVIN,1gmc_1,['1gmc_1'],1
+SYI1_STAAU,1ffy_1,"['1ffy_1', '1qu3_1', '1qu2_1']",3
+MCEL_VACCW,4ckb_1,"['4ckb_1', '4ckb_3', '4ckc_2']",3
+VDRA_DANRE,2hc4_1,"['2hc4_1', '2hbh_1', '4ruj_1', '4ia3_1', '4ruo_1', '3dr1_1', '4g2h_1', '4fhi_1', '4g20_1', '4rup_1', '4g21_1', '4ia7_1', '4q0a_1', '4ia2_1', '4g1z_1', '2hcd_1', '4fhh_1', '4g1y_1', '4ia1_1', '4g1d_1']",20
+LYS9_MAGO7,1e5q_1,['1e5q_1'],1
+PUR7_ECOLI,2gqr_1,['2gqr_1'],1
+RGN_HUMAN,4gnc_2,['4gnc_2'],1
+GLTB_AZOBR,1ea0_1,['1ea0_1'],1
+LKHA4_HUMAN,2r59_1,"['2r59_1', '3ftx_1', '3ftx_2', '3chs_2', '3ful_1', '3chr_1', '3fu5_1', '3fuf_2', '4rsy_1', '3fui_1', '3fuj_1', '3fun_1', '3cho_1', '3fuh_2']",14
+Q8KNF6_MICEC,4xr9_2,"['4xr9_2', '4xr9_1']",2
+NEK2_HUMAN,2xno_1,"['2xno_1', '2xkd_1', '2xnp_1', '2xkc_1', '2jav_1', '4afe_1', '2xk8_1', '2wqo_1', '2xk6_1', '2w5b_1', '4a4x_1', '2w5a_1', '2xke_1', '2xk3_1', '2xnn_1', '2xk4_1', '2xnm_1', '2xkf_1', '2xk7_1']",19
+Q5CYZ3_CRYPI,2hjr_9,['2hjr_9'],1
+HAT1_YEAST,4psx_1,"['4psx_1', '4psw_1', '1bob_1']",3
+AKT1_HUMAN,4ekl_1,"['4ekl_1', '3cqw_1', '4ejn_1', '3cqu_1', '3mv5_1', '3o96_1', '4gv1_1', '4ekk_1', '3mvh_1']",9
+KLK6_HUMAN,4d8n_1,['4d8n_1'],1
+GLNA3_MAIZE,2d3a_6,['2d3a_6'],1
+TRMB_YEAST,2vdv_2,['2vdv_2'],1
+ODB2_BOVIN,2ii4_3,"['2ii4_3', '2ii3_5', '2ii5_5']",3
+Q6NAV4_RHOPA,3pm9_5,['3pm9_5'],1
+SPRE_HUMAN,4j7u_1,"['4j7u_1', '4j7x_5', '4j7x_2', '4j7u_5', '4hwk_7', '4hwk_2']",6
+DBR_TOBAC,4hfm_2,"['4hfm_2', '4hfn_1']",2
+MDH_PYRHO,1v9n_1,['1v9n_1'],1
+Q9K054_NEIMB,3eei_1,['3eei_1'],1
+CP2A6_HUMAN,2fdv_1,"['2fdv_1', '2fdw_2', '2fdu_1', '2fdy_1', '3t3r_2', '3t3q_3']",6
+POL_HV1Y2,4a6c_1,"['4a6c_1', '1t7j_1', '1t7i_1', '1k6v_1', '1k6c_1', '1k6t_1', '4a6b_1', '1k6p_1']",8
+ENPP6_MOUSE,5egh_1,['5egh_1'],1
+SAHH_RAT,1ky4_1,"['1ky4_1', '1b3r_2', '1xwf_3']",3
+KGUA_MOUSE,1lvg_1,['1lvg_1'],1
+Q5SLQ6_THET8,2cvz_3,"['2cvz_3', '1wp4_3']",2
+TYSY_VZVO,4xsd_1,['4xsd_1'],1
+SEPT2_MOUSE,3ftq_3,['3ftq_3'],1
+PRMA_THET8,3egv_1,"['3egv_1', '2nxe_2', '3cjt_1', '2zbp_1', '3cjq_3']",5
+A9CL58_AGRFC,4id9_2,"['4id9_2', '4idg_1']",2
+Q57265_NEIME,1xuz_1,['1xuz_1'],1
+RISA_ECOLI,1pkv_1,['1pkv_1'],1
+Q9ZGC1_STRCY,4kwh_2,"['4kwh_2', '4kwi_2']",2
+AZOR1_BACAN,4m0c_2,['4m0c_2'],1
+CP2B6_HUMAN,3ibd_1,"['3ibd_1', '3ua5_2']",2
+A4PHY4_CHRMO,2e1t_1,['2e1t_1'],1
+Q9L422_NOSS1,3n5b_1,['3n5b_1'],1
+J7H1A1_9ACTN,5buk_1,['5buk_1'],1
+HCD2_RAT,1e3w_3,"['1e3w_3', '1e3s_4', '1e6w_3']",3
+LDH_GEOSE,2ldb_4,['2ldb_4'],1
+MQMTN_HELPY,4bmz_1,['4bmz_1'],1
+O28527_ARCFU,3ncr_1,"['3ncr_1', '3ncq_2']",2
+LST_NEIMB,2yk6_1,['2yk6_1'],1
+NAT5_YEAST,4xpd_2,"['4xpd_2', '4xnh_1']",2
+EGS1_OCIBA,3c3x_1,"['3c3x_1', '2qx7_2', '2qw8_2', '2r6j_2', '2r2g_1']",5
+NOTUM_HUMAN,4uz6_2,['4uz6_2'],1
+PTPRG_HUMAN,3qci_1,"['3qci_1', '3qcf_1', '3qcl_1', '3qcj_1', '3qce_1', '3qcm_1', '3qch_1', '3qck_1']",8
+GNGF_BACHD,2o2z_3,['2o2z_3'],1
+A6XNE6_9ROSI,4e70_1,['4e70_1'],1
+Q9RTS8_DEIRA,3s6f_1,['3s6f_1'],1
+A8WFV1_DANRE,4ivg_1,"['4ivg_1', '4ipe_2']",2
+Q9LBJ0_BURGL,5jdz_2,"['5jdz_2', '5je2_2', '5je3_2', '5je4_2']",4
+BPHB_BURXL,1bdb_1,['1bdb_1'],1
+BLAB_AERHY,3iog_1,"['3iog_1', '2qds_1']",2
+Q8SXK5_DROME,3cvy_1,"['3cvy_1', '2wq7_1', '2wq6_1', '3cvu_1', '2wb2_1']",5
+O53146_MYCTU,4rvu_4,['4rvu_4'],1
+B0F9F6_RHOER,2yg7_1,"['2yg7_1', '2yg5_1', '2yg6_1', '2yg3_2', '2yg4_2']",5
+SYT_PYRAB,2hl2_2,"['2hl2_2', '4rrq_1', '3pd4_1', '2hl1_1', '3pd5_2', '4rrr_1', '3pd3_2', '3pd2_2', '2hl0_1']",9
+MTNN_ECOLI,1nc1_1,"['1nc1_1', '1y6q_1', '1y6r_2']",3
+Q46342_CLOSO,2vkd_2,['2vkd_2'],1
+Q8D0U0_YERPE,3pyz_1,['3pyz_1'],1
+Q97FM4_CLOAB,3f10_1,['3f10_1'],1
+DGDA_BURCE,1d7r_1,['1d7r_1'],1
+GME_ARATH,2c54_2,"['2c54_2', '2c5e_1', '2c59_2']",3
+DYR_LACCA,3dfr_1,"['3dfr_1', '1bzf_1', '1diu_1', '1dis_1', '1ao8_1', '1lud_1', '2hqp_1', '2lf1_1', '2hm9_1']",9
+PGTB1_RAT,1n4q_2,"['1n4q_2', '1n4p_1', '1n4s_4', '1s64_4']",4
+Q6TEI5_PLABE,3f4b_2,['3f4b_2'],1
+Q97W22_SULSO,4zfn_1,['4zfn_1'],1
+F2YGR7_TOXGO,4lv5_1,"['4lv5_1', '3q60_1']",2
+Q7YTF7_PLAF7,2pmo_1,"['2pmo_1', '2pmn_1']",2
+TERA_MOUSE,1s3s_1,"['1s3s_1', '1e32_1', '3cf0_13']",3
+D5AV00_RHOCB,3nd1_2,['3nd1_2'],1
+Q84AR1_CITFR,4oma_1,['4oma_1'],1
+Q9KDW6_BACHD,3da1_1,['3da1_1'],1
+MCL1_HUMAN,3wiy_2,"['3wiy_2', '4hw3_6', '4hw2_6', '3wix_4']",4
+O50095_PYRHO,1wwk_2,['1wwk_2'],1
+B3Y963_GEOSE,3ayg_1,['3ayg_1'],1
+ACADV_HUMAN,2uxw_1,['2uxw_1'],1
+CBR1_PIG,1n5d_1,['1n5d_1'],1
+Q9LCV7_STRCL,2jap_1,"['2jap_1', '2jah_1']",2
+PAR14_HUMAN,4abk_1,"['4abk_1', '4d86_2', '4f1q_2', '4f1l_2', '3vfq_1', '3q71_1']",6
+Q79H45_BORPE,3q2k_17,"['3q2k_17', '3q2k_13']",2
+MMP3_HUMAN,3oho_1,"['3oho_1', '1sln_1', '3usn_1', '1c8t_2', '4g9l_1', '1b3d_1', '1biw_1', '2srt_1', '1d5j_1', '1hy7_1', '1d7x_1', '1g49_1', '4dpe_1', '1g05_1', '1ciz_1', '1d8m_1', '1g4k_2', '2jnp_1', '4ja1_1', '2d1o_2', '1b8y_1', '1caq_1', '1d8f_1', '1bqo_1']",24
+CTDS1_HUMAN,2ght_1,['2ght_1'],1
+TRMD_PARP8,4h3y_1,"['4h3y_1', '4h3z_2']",2
+ESCO1_HUMAN,4mxe_2,['4mxe_2'],1
+NDK_BURTA,4hr2_2,['4hr2_2'],1
+IPPK_ARATH,4aqk_1,"['4aqk_1', '4axd_1', '4lv7_1', '3udz_2', '2xan_2', '4axf_1']",6
+DLDH_TRYCR,2qae_2,['2qae_2'],1
+Q2TNI4_9ENTR,2vrb_1,"['2vrb_1', '2jl1_1']",2
+LDT2_MYCTO,4gsu_2,['4gsu_2'],1
+O50641_RHORH,4ap1_2,"['4ap1_2', '4aox_1', '4ap3_1', '4aos_1', '4ap1_1', '4ap3_2', '4aos_2']",7
+A7Z6E3_BACVZ,4cw5_2,['4cw5_2'],1
+FUCO_ECOLI,5br4_1,"['5br4_1', '2bl4_2', '2bi4_1', '1rrm_1']",4
+ARBK1_BOVIN,3pvu_1,"['3pvu_1', '3pvw_1']",2
+Q8IL32_PLAF7,3ied_1,['3ied_1'],1
+PHOT2_ARATH,2z6d_1,"['2z6d_1', '4ees_1', '4eeu_1', '4eer_1', '4eep_1', '4eet_2']",6
+JAK3_HUMAN,3pjc_1,"['3pjc_1', '4hvg_1', '3zc6_3', '4hvi_1', '3zep_2', '3lxk_1', '4hvh_1', '1yvj_1']",8
+RECA_MYCS2,2zre_1,"['2zre_1', '2zrj_1', '2zro_1', '2zrf_1', '2zr9_1']",5
+DXS_ECOLI,2o1s_2,['2o1s_2'],1
+DEF_ENTFA,2os1_1,['2os1_1'],1
+ADH_THEBR,1ykf_3,"['1ykf_3', '2nvb_3']",2
+Q180K0_PEPD6,3koq_2,['3koq_2'],1
+ASPD_THEMA,1h2h_1,"['1h2h_1', '1j5p_1']",2
+M3K14_HUMAN,4idt_2,"['4idt_2', '4idv_4', '4dn5_2']",3
+THIB_ECOLI,2qry_1,['2qry_1'],1
+B1YXI0_BURA4,4fry_1,['4fry_1'],1
+GYRB_ENTFA,4gfn_1,"['4gfn_1', '4ggl_1', '4hxw_1', '4ksg_1', '4ksh_1', '4k4o_1', '4gee_1']",7
+ODP1_ECOLI,1rp7_1,"['1rp7_1', '2qta_1', '2g25_2', '2iea_1', '2g28_2', '2qtc_2', '1l8a_1']",7
+ANM8_HUMAN,5dst_5,['5dst_5'],1
+BIEA_RAT,1lc3_1,['1lc3_1'],1
+PTPA_HUMAN,2hv7_2,['2hv7_2'],1
+CYSP_TRYCR,1u9q_1,['1u9q_1'],1
+NR1H4_HUMAN,4qe6_1,"['4qe6_1', '3bej_1']",2
+BGLT_THEMA,1up6_1,"['1up6_1', '1up7_2']",2
+ARNA_ECOLI,1z7e_6,"['1z7e_6', '1z7e_7']",2
+AHK4_ARATH,3t4q_1,"['3t4q_1', '3t4s_1', '3t4l_1', '3t4k_1']",4
+CAH2_HUMAN,3sbh_1,"['3sbh_1', '4iwz_1', '5flt_1', '3n3j_1', '3mna_1', '1kwq_1', '1yda_1', '3daz_1', '1if6_1', '1if5_1', '1g45_1', '1cny_1', '1i9q_2', '3myq_1', '1bn1_1', '3dbu_1', '3oim_1', '3m98_1', '3k2f_1', '1i9p_1', '3m2n_1', '4knj_1', '1if8_1', '1bnq_1', '4k13_1', '3sax_1', '3d9z_1', '4itp_1', '3m5e_1', '1i9n_1', '3ml2_1', '1if4_1', '3n0n_1', '3f4x_1', '3igp_1', '4m2v_1', '3l14_1', '3mho_1', '3ni5_1', '1bnv_1', '3n4b_1', '4m2r_1', '3mhi_1', '2h15_1', '3po6_1', '3mhc_1', '3n2p_1', '3kig_1', '1cnw_1', '1cil_1', '3v2j_1', '2x7t_1', '3ffp_1', '1g4o_1', '3rz8_1', '3m96_1', '1okm_1', '4pxx_1', '4dz7_1', '1oq5_1', '4mo8_1', '2wd2_1', '1zsb_1', '1if7_1', '3t82_1', '1g52_1', '1bnn_1', '3oyq_1', '1bnm_1', '3dcw_1', '3mhl_1', '1cnx_1', '3m2y_2', '3bl1_1', '1g4j_1', '2x7u_1', '3sbi_1', '3mzc_1', '1okl_1', '3s9t_1', '3dd8_1', '1bn3_1', '2weh_1', '4kap_1', '4bf1_1', '1g54_1', '2weg_1', '2q1q_1', '2wej_1', '3eft_1', '3t84_1', '3t85_1', '2eu3_1', '1i91_1', '3s8x_1', '3dcs_1', '3hku_1', '3b4f_1', '1bnu_1', '1okn_1', '3m67_1', '1eou_1', '1ttm_1', '1xpz_1', '1bnt_1', '1i90_1', '3dd0_1', '1bn4_1', '4bf6_1', '3nb5_1', '1a42_1', '1bnw_1', '3p5l_1', '4n16_1', '4ito_1', '3bet_1', '3oy0_1', '3d8w_1', '3oik_1', '4ilx_1', '3qyk_1', '3oys_1', '3dcc_1', '4k0z_1', '3mmf_1', '1i9m_2', '2weo_1', '4kni_1', '3dc3_1', '1g1d_1', '1i8z_1', '4k0t_1', '1kwr_1', '2pow_1', '2h4n_1', '3m40_1', '1xq0_1']",137
+PA2H2_BOTPI,3cyl_1,['3cyl_1'],1
+Q8KGE0_CHLTE,1x1d_1,"['1x1d_1', '1x1b_1', '1x1c_1', '1x1a_1']",4
+RDMC_STREF,1q0r_1,"['1q0r_1', '1q0z_1']",2
+DEOD_BACSU,4da7_1,"['4da7_1', '4dae_1', '4da8_1', '4dan_2', '4da0_1', '4da6_1']",6
+Q7NSZ5_CHRVO,2zf4_9,['2zf4_9'],1

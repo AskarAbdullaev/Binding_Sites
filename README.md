@@ -109,6 +109,8 @@ each fold, 2811 - 2814 samples were used for training and 702 - 704 for testing.
 ing to [4], cross-validation is particularly suitable when a disjoint validation set is not
 feasible.
 
+
+Table 1: Selected aggregated values of scPDB (v.2017):
 | Metric                                          | Value(s)                                                             |
 |:------------------------------------------------|:---------------------------------------------------------------------|
 | Total Entries                                   | 16033                                                                |

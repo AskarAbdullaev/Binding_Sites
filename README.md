@@ -26,12 +26,14 @@ arranged in one or more polypeptide chains. Their three-dimensional structures f
 intricate surfaces with numerous concavities and protrusions, creating distinct microen-
 vironments for ligand binding and catalysis [23]. These regions are commonly referred to
 as (ligand-)binding pockets, (ligand-)binding sites.
+
 The identification and characterization of druggable pockets play a crucial role in in
 silico target-based drug discovery, a critical step in structure-based drug design [34].
 However, traditional drug discovery methods are often time-consuming and expensive
 [33]. Thus, nn recent years, computational approaches have been increasingly adopted
 by the industry to improve the efficiency and effectiveness of the drug discovery process
 [33]. Noticeably, deep learning has become a powerful tool in computational biology [2].
+
 In 2017 article DeepSite [17] proposed an algorithm theh predicts binding sites (pockets)
 for arbitrary protein structures both at the point-wise level and in 3D space. While ear-
 lier tools such as FPocket [20], POCKET [22], Pocket-Picker [32], SURFNET [19], and
@@ -40,6 +42,7 @@ ric analyses (using, for example, alpha-spheres [20] or probing spheres between 
 atoms [22, 32]) or combine geometric data with evolutionary conservation [5]. In con-
 trast, DeepSite leverages a 3D deep convolutional neural network (DCNN) architecture
 and incorporates the chemical features of individual atoms.
+
 A convolutional neural network (CNN) is a type of neural network specifically designed
 to process grid-like data structures such as images or volumetric data [14]. The main
 principle of CNNs is similar to traditional neural networks: the input is transformed
@@ -54,6 +57,7 @@ tecture is obtained. In the context of 3D protein data, DCNNs include 3D convolu
 layers that operate over three spatial dimensions and use 3D filters (kernels). As it is
 shown by [30], 3D convolutional neural networks are able to surpass traditional docking
 algorithms when applied to proteins.
+
 The main goal of this research is to apply the similar approach as suggested by DeepSite,
 while using the current version of the scPDB database [10] in order to estimate if the
 success of DeepSite is reproducible and scalable. Due to computational limitations, the
@@ -75,6 +79,7 @@ ligands, along with corresponding high-quality, non-redundant protein binding si
 more structural information and for later analyses, I will also make use of the latest stable
 release of a SCOPe database [6]: a database, which classifies protein chains according to
 their structure, function and taxonomy.
+
 By the 14th October 2025, there are 17,594 entries available for download from the official
 page of scPDB. However, according to the information on the same site, the last stable
 release (2017) contains 16034 entries, 4782 proteins and 6326 ligands. To avoid unchecked
@@ -82,8 +87,10 @@ entries, erroneous entries and duplicates in the dataset, the thorough parsing o
 web-pages is performed. Using the BeautifulSoup4 module [29] I have successfully found
 16033 entries, which is only one less than a stable release contains. Also, additional
 valuable information about the entries is obtained, some of which is summarized in the
-table Table 1
+Table 1
+
 According to the aggregated table:
+
 1. PDB IDs are not unique across entries, 783 entries have the IDS already present in
 the database;
 2. Unique UniProts [9] (unique proteins themselves) are much less numerous - only
@@ -103,6 +110,7 @@ Ligand properties are not of much interest to us in the scope of this paper.
 To prevent erroneous evaluation, only a single example featuring the distinct protein
 structure (unique UniProt ID). 25% of samples (1172) are held-out for the final test set
 to compute the domain specific-metrics.
+
 The remaining dataset is evaluated using the 5-fold cross-validation [19] approach (ini-
 tially, 10-fold procedure was chosen but abandoned due to computational reasons). In
 each fold, 2811 - 2814 samples were used for training and 702 - 704 for testing. Accord-
@@ -165,6 +173,7 @@ Table 2: Rules (atom types) used for chemical feature descriptors: DeepSite
 
 Each protein structure is treated as a three-dimensional image with a resolution of 1 ×
 1 × 1 Å3 or 2 × 2 × 2 Å3 per voxel (as the mean resolution of 3D structures appeared to be around 2Å, it is worth testing both voxel sizes). A voxel (volumetric pixel) is the 3D analog of a 2D pixel, representing a value on a regular three-dimensional grid.
+
 Just as pixels in standard images contain color information for different channels (e.g.,
 RGB), each protein voxel contains spatial/chemical information. For this paper 8 channels
 are chosen (suggested in the DeepSite): hydrophobic, aromatic, hydrogen bond acceptor,
@@ -181,7 +190,7 @@ $$
 n(r) = 1 - \exp\left(-\left(\frac{r_{\text{vdw}}}{r}\right)^{12}\right)
 $$
 
-where rvdw denotes the Van der Waals radius of an atom — i.e., the distance at which
+where $r_{vdw}$ denotes the Van der Waals radius of an atom — i.e., the distance at which
 another atom can approach without significant repulsion [28] — and r is the Euclidean
 distance from the atom to the voxel center. This function serves as a normalized measure
 of the influence of the atom on the voxel, mapping the values to the range [0, 1) by design.
@@ -189,6 +198,7 @@ The algorithm computes the occupancy score of each atom with respect to each vox
 center and assigns to the voxel descriptor the chemical properties of the atom with the
 highest occupancy score. This results in an 8-channel representation of each voxel based
 on the most relevant nearby atom.
+
 The computational burden of a naive computation would have the computational com-
 plexity for one protein O(N · A3/V3), where N - the number of atoms per protein; A -
 the maximum span of coordinates; V - the chosen voxel size. To decrease the complexity,
@@ -226,7 +236,7 @@ otherwise, the subgrid is labeled as negative. Mathematically, it means that one
 site produces from 3 to 8 positive subgrids. This enables the model to learn localized
 features that distinguish true binding sites from surrounding regions.
 
-Figure 1. Chemical channels highlighted in the \emph{atom} layout (left) and in the \emph{voxel} layout (right). Non-highlighted atoms/voxels rendered as semi-transparent green objects. (Structure shown: 2z08\_1)
+Figure 1. Chemical channels highlighted in the atom layout (left) and in the voxel layout (right). Non-highlighted atoms/voxels rendered as semi-transparent green objects. (Structure shown: 2z08\_1)
 <img width="495" height="790" alt="atoms_and_voxels" src="https://github.com/user-attachments/assets/d2ac96d2-bdec-459b-a101-437d8ef1417e" />
 
 

@@ -237,6 +237,8 @@ site produces from 3 to 8 positive subgrids. This enables the model to learn loc
 features that distinguish true binding sites from surrounding regions.
 
 Figure 1. Chemical channels highlighted in the atom layout (left) and in the voxel layout (right). Non-highlighted atoms/voxels rendered as semi-transparent green objects. (Structure shown: 2z08\_1)
+
+
 <img width="495" height="790" alt="atoms_and_voxels" src="https://github.com/user-attachments/assets/d2ac96d2-bdec-459b-a101-437d8ef1417e" />
 
 
@@ -272,45 +274,51 @@ Table 3: Number of trainable parameters for different model configurations.
 
 Listing 1: 3D DCNN model architecture.
 ```python
-1. self.dropout = dropout
-2 self.channel_size = channel_size
-3 self.voxel_size = voxel_size
-4 self.k = self.voxel_size ** 1.5
-5
-6 self.model = torch.nn.Sequential(
-7 torch.nn.Conv3d(8,
-8 int(16 * self.channel_size * self.k),
-9 kernel_size=8 // self.voxel_size,
-10 padding='same'),
-11 torch.nn.ELU(),
-12 torch.nn.Conv3d(int(16 * self.channel_size * self.k),
-13 int(16 * (self.channel_size + 1) * self.k),
-14 kernel_size=4 // self.voxel_size,
-15 padding='same'),
-16 torch.nn.ELU(),
-17 torch.nn.MaxPool3d(2),
-18 torch.nn.Dropout3d(dropout),
-19 torch.nn.Conv3d(int(16 * (self.channel_size + 1) * self.k),
-20 int(16 * (self.channel_size + 2) * self.k),
-21 kernel_size=4 // self.voxel_size,
-22 padding='same'),
-23 torch.nn.ELU(),
-24 torch.nn.Conv3d(int(16 * (self.channel_size + 2) * self.k),
-25 int(16 * (self.channel_size + 3) * self.k),
-26 kernel_size=4 // self.voxel_size,
-27 padding='same'),
-28 torch.nn.ELU(),
-29 torch.nn.MaxPool3d(2),
-30 torch.nn.Dropout3d(dropout),
-31 torch.nn.Flatten(),
-32 torch.nn.Linear((4 // self.voxel_size) ** 3 * int(16 * (self.
-channel_size + 3) * self.k),
-33 int(128 * self.k)),
-34 torch.nn.ELU(),
-35 torch.nn.Dropout(dropout * 2),
-36 torch.nn.Linear(int(128 * self.k), 1)
-37 )
+self.dropout = dropout
+self.channel_size = channel_size
+self.voxel_size = voxel_size
+self.k = self.voxel_size ** 1.5
+
+self.model = torch.nn.Sequential(
+    torch.nn.Conv3d(
+        8,
+        int(16 * self.channel_size * self.k),
+        kernel_size=8 // self.voxel_size,
+        padding='same'),
+    torch.nn.ELU(),
+    torch.nn.Conv3d(
+        int(16 * self.channel_size * self.k),
+        int(16 * (self.channel_size + 1) * self.k),
+        kernel_size=4 // self.voxel_size,
+        padding='same'),
+    torch.nn.ELU(),
+    torch.nn.MaxPool3d(2),
+    torch.nn.Dropout3d(dropout),
+    torch.nn.Conv3d(
+        int(16 * (self.channel_size + 1) * self.k),
+        int(16 * (self.channel_size + 2) * self.k),
+        kernel_size=4 // self.voxel_size,
+        padding='same'),
+    torch.nn.ELU(),
+    torch.nn.Conv3d(
+        int(16 * (self.channel_size + 2) * self.k),
+        int(16 * (self.channel_size + 3) * self.k),
+        kernel_size=4 // self.voxel_size,
+        padding='same'),
+    torch.nn.ELU(),
+    torch.nn.MaxPool3d(2),
+    torch.nn.Dropout3d(dropout),
+    torch.nn.Flatten(),
+    torch.nn.Linear(
+        (4 // self.voxel_size) ** 3 * int(16 * (self.channel_size + 3) * self.k),
+        int(128 * self.k)),
+    torch.nn.ELU(),
+    torch.nn.Dropout(dropout * 2),
+    torch.nn.Linear(int(128 * self.k), 1)
+)
 ```
+
+## Hyperparameters Search
 
 
 ## References

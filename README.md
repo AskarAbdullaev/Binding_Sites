@@ -240,6 +240,79 @@ Figure 1. Chemical channels highlighted in the atom layout (left) and in the vox
 <img width="495" height="790" alt="atoms_and_voxels" src="https://github.com/user-attachments/assets/d2ac96d2-bdec-459b-a101-437d8ef1417e" />
 
 
+## Architecture
+
+The model architecture is inspired by the DeepSite architecture. The model takes a 16 ×
+16 × 16Å (the exact number of voxels depends on the voxel size) with 8 pharmacophoric
+channels as input.
+
+The first convolutional block applies two 3D convolution layers: an 8×8×8Å convolution
+followed by a 4×4×4Å convolution. The output is then downsampled using 2×2×2 max
+pooling and regularized with a dropout layer. This block is repeated with an updated
+configuration: 4 × 4 × 4Å convolution layers. The exact kernel sizes depend on the chosen
+voxel sizes to make the receptive fields of the kernels comparable.
+
+The final portion of the model consists of a dense layer and an output neuron with a
+sigmoid activation function, which outputs a probability for the binary classification task
+(is there a binding site within 4 Å from the subgrid center or not). Each convolutional and
+dense layer is followed by an ELU (Exponential Linear Unit) activation, except for the
+last output, which is processed using sigmoid to convert it into probability. The number
+of parameters for this architecture is moderate (see Table ??).Notice that the number of
+parameters is comparable regardless the size of the voxel due to the scaling parameter
+’k’ in the model definition. The model is implemented in PyTorch [26]. For the model
+architecture Python code see Listing 1.
+
+Table 3: Number of trainable parameters for different model configurations.
+| Channel size | Voxel size | Parameters |
+| ------------ | ---------- | ---------- |
+| ×1 | 1 | 917,921 |
+| ×2 | 1 | 1,409,505 |
+| ×1 | 2 | 873,472 |
+| ×2 | 2 | 1,321,861 |
+
+Listing 1: 3D DCNN model architecture.
+```python
+1. self.dropout = dropout
+2 self.channel_size = channel_size
+3 self.voxel_size = voxel_size
+4 self.k = self.voxel_size ** 1.5
+5
+6 self.model = torch.nn.Sequential(
+7 torch.nn.Conv3d(8,
+8 int(16 * self.channel_size * self.k),
+9 kernel_size=8 // self.voxel_size,
+10 padding='same'),
+11 torch.nn.ELU(),
+12 torch.nn.Conv3d(int(16 * self.channel_size * self.k),
+13 int(16 * (self.channel_size + 1) * self.k),
+14 kernel_size=4 // self.voxel_size,
+15 padding='same'),
+16 torch.nn.ELU(),
+17 torch.nn.MaxPool3d(2),
+18 torch.nn.Dropout3d(dropout),
+19 torch.nn.Conv3d(int(16 * (self.channel_size + 1) * self.k),
+20 int(16 * (self.channel_size + 2) * self.k),
+21 kernel_size=4 // self.voxel_size,
+22 padding='same'),
+23 torch.nn.ELU(),
+24 torch.nn.Conv3d(int(16 * (self.channel_size + 2) * self.k),
+25 int(16 * (self.channel_size + 3) * self.k),
+26 kernel_size=4 // self.voxel_size,
+27 padding='same'),
+28 torch.nn.ELU(),
+29 torch.nn.MaxPool3d(2),
+30 torch.nn.Dropout3d(dropout),
+31 torch.nn.Flatten(),
+32 torch.nn.Linear((4 // self.voxel_size) ** 3 * int(16 * (self.
+channel_size + 3) * self.k),
+33 int(128 * self.k)),
+34 torch.nn.ELU(),
+35 torch.nn.Dropout(dropout * 2),
+36 torch.nn.Linear(int(128 * self.k), 1)
+37 )
+```
+
+
 ## References
 
 [1] Acellera. 2025. PlayMolecule: Molecular Discovery Platform. Accessed: 2025-03-28.

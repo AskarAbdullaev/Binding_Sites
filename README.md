@@ -66,6 +66,84 @@ deep learning methods in structural bioinformatics. Moreover, investigation of h
 rameters may reveal additional insights for future development of the method.
 
 
+## Materials
+
+The primary source of protein structures and related information for the study is scPDB
+[10], an annotated database of druggable binding sites derived from the Protein Data
+Bank (PDB) [3]. The scPDB mainly includes information on small synthetic and natural
+ligands, along with corresponding high-quality, non-redundant protein binding sites. For
+more structural information and for later analyses, I will also make use of the latest stable
+release of a SCOPe database [6]: a database, which classifies protein chains according to
+their structure, function and taxonomy.
+By the 14th October 2025, there are 17,594 entries available for download from the official
+page of scPDB. However, according to the information on the same site, the last stable
+release (2017) contains 16034 entries, 4782 proteins and 6326 ligands. To avoid unchecked
+entries, erroneous entries and duplicates in the dataset, the thorough parsing of individual
+web-pages is performed. Using the BeautifulSoup4 module [29] I have successfully found
+16033 entries, which is only one less than a stable release contains. Also, additional
+valuable information about the entries is obtained, some of which is summarized in the
+table Table 1
+According to the aggregated table:
+1. PDB IDs are not unique across entries, 783 entries have the IDS already present in
+the database;
+2. Unique UniProts [9] (unique proteins themselves) are much less numerous - only
+about 4690, which makes the database structurally redundant.
+3. Mean resolution is more then 2Å.
+4. Majority of structures come from Eukaryotic organisms and around a third - from
+Homo sapiens.
+5. Although there are hundreds of SCOPe families, several are largely over-represented
+in the database
+6. About 20% of binding sites contain metal atoms (mostly Mg, Zn or Mn) and only
+9% contain co-factors (mostly NAP, FAD or NDP)
+7. There on average 36 residues per binding site, with mean volume being around 800
+3.
+8. Cavities have Hydrophobic and Polar regions on average in the same proportion.
+Ligand properties are not of much interest to us in the scope of this paper.
+To prevent erroneous evaluation, only a single example featuring the distinct protein
+structure (unique UniProt ID). 25% of samples (1172) are held-out for the final test set
+to compute the domain specific-metrics.
+The remaining dataset is evaluated using the 5-fold cross-validation [19] approach (ini-
+tially, 10-fold procedure was chosen but abandoned due to computational reasons). In
+each fold, 2811 - 2814 samples were used for training and 702 - 704 for testing. Accord-
+ing to [4], cross-validation is particularly suitable when a disjoint validation set is not
+feasible.
+
+| Metric                                          | Value(s)                                                             |
+|:------------------------------------------------|:---------------------------------------------------------------------|
+| Total Entries                                   | 16033                                                                |
+| Unique PDB IDs                                  | 15250                                                                |
+| Unique Uniprot IDs                              | 4690                                                                 |
+| Mean Resolution (Å)                             | 2.14                                                                 |
+| Number of Unique Species                        | 927                                                                  |
+| Most Common Species                             | Homo sapiens (5406), Escherichia coli (977), Rattus norvegicus (568) |
+| Number of Unique Reigns                         | 5                                                                    |
+| Most Common Reign                               | Eukaryota (9199), Bacteria (5308), Viruses (949)                     |
+| SCOPe classes present                           | 597                                                                  |
+| Most Common SCOPe classes                       | c.2.1 (2767), l.1.1 (2676), d.144.1 (2436)                           |
+| Binding Sites with Metals                       | 3323                                                                 |
+| Most Common Metals in Binding Sites             | MG (2027), ZN (930), MN (367)                                        |
+| Binding Sites with Cofactors                    | 1389                                                                 |
+| Most Common Cofactors in Binding Sites          | NAP (345), FAD (286), NDP (187)                                      |
+| Number of Residues in Binding Site (mean)       | 36.45                                                                |
+| Standard Amino Acids in Binding Site (mean)     | 34.49                                                                |
+| Non Standard Amino Acids in Binding Site (mean) | 0.49                                                                 |
+| Water Molecules in Binding Site (mean)          | 1.47                                                                 |
+| Cavity Ligandability (mean)                     | 0.8566253976174142                                                   |
+| Cavity Volume (Å³) (mean)                       | 792.66                                                               |
+| Cavity % Hydrophobic (mean)                     | 49.06                                                                |
+| Cavity % Polar (mean)                           | 50.94                                                                |
+| Ligand Molecular Weight (mean)                  | 475.83                                                               |
+| Ligand Buried Surface Area (Å²) (mean)          | 63.84                                                                |
+| Ligand Polar Surface Area (Å²) (mean)           | 220.15                                                               |
+| Ligand H-Bond Acceptors (mean)                  | 10.45                                                                |
+| Ligand H-Bond Donors (mean)                     | 3.50                                                                 |
+| Ligand Rings (mean)                             | 3.41                                                                 |
+| Ligand Aromatic Rings (mean)                    | 2.00                                                                 |
+| Ligand Anionic Atoms (mean)                     | 1.51                                                                 |
+| Ligand Cationic Atoms (mean)                    | 0.35                                                                 |
+| Ligand Rule of Five Violation (mean)            | 1.12                                                                 |
+| Ligand Rotatable Bonds (mean)                   | 7.83                                                                 |
+
 ## References
 
 [1] Acellera. 2025. PlayMolecule: Molecular Discovery Platform. Accessed: 2025-03-28.

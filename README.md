@@ -177,9 +177,9 @@ SYBYL atom types associated with channels can be found in the Table 2.
 Folowing the DeepSite idea, I also use a spacial metric to estimate the voxel channel
 values - a continuous occupancy score, defined as:
 
-\[
+$$
 n(r) = 1 - \exp\left(-\left(\frac{r_{\text{vdw}}}{r}\right)^{12}\right)
-\]
+$$
 
 where rvdw denotes the Van der Waals radius of an atom — i.e., the distance at which
 another atom can approach without significant repulsion [28] — and r is the Euclidean
@@ -212,17 +212,22 @@ the atom center belongs to a voxel (xa, ya, za), the maximum effective span woul
 1 + ⌊(3 · rvdw − V/2)/V⌋ in every direction, where V - voxel size.
 The example of original and voxelized layouts for the structure ’2z08_1’ can be seen in
 Figure 1.
+
 To limit and standardize the input size of the model and focus on the local structure,
 the protein grid is divided into cubic subgrids of size 16 × 16 × 16 Å3 (16 or 8 voxels per
 side depending on voxel size). The entire protein grid is padded with an 8 Å margin in
 each direction to ensure that each protein voxel appears in the central part of at least
 one subgrid.
+
 These subgrids are extracted with a sliding window sampling using a stride of 4 Å. Each
 subgrid is labeled as positive if the distance between its geometric center and the an-
 notated binding pocket center (from the scPDB database) is less than or equal to 4 Å;
 otherwise, the subgrid is labeled as negative. Mathematically, it means that one binding
 site produces from 3 to 8 positive subgrids. This enables the model to learn localized
 features that distinguish true binding sites from surrounding regions.
+
+Figure 1. Chemical channels highlighted in the \emph{atom} layout (left) and in the \emph{voxel} layout (right). Non-highlighted atoms/voxels rendered as semi-transparent green objects. (Structure shown: 2z08\_1)
+<img width="495" height="790" alt="atoms_and_voxels" src="https://github.com/user-attachments/assets/d2ac96d2-bdec-459b-a101-437d8ef1417e" />
 
 
 ## References

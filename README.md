@@ -36,31 +36,31 @@ For this project I used the following modules:
 |
 |- Data 
     |
-    |- scPDB
+    |- scPDB (original scPDB dataset)
         |- 1a2b_1
             |- protein.mol2
             |- site.mol2
             |- ...(other possible files from scPDB)
         |- ...(all scPDB entries)
     |
-    |- SCOPe
+    |- SCOPe (folder with SCOPe versions)
         |- 2_08.csv
         |- ...(possibly other SCOPe versions)
     |
-    |- Pages
+    |- Pages (textual files with scPDB web-pages source codes)
         |- 1a2b_1.txt
         |- ...(all the source codes of scPDB web pages)
     |
-    |- Folds
+    |- Folds (CSVs with data split / folds)
         |- 1.csv
         |- ...(other folds)
         |- test.csv
     |
-    |- Atoms
+    |- Atoms (CSVs with processed atoms, including chemical channels)
         |- 1a2b_1.csv
         |- ...(csvs with atom coords and props)
     |
-    |- Voxels
+    |- Voxels (voxelized entries in compact form: atom_grid + occupancy + decoder (common))
         |- 1
             |- 1a2b_1
                 |- atoms_grid.npy
@@ -75,7 +75,7 @@ For this project I used the following modules:
                 |- site_center.npy
             |- ... (other voxelized entries with voxel size 2)
     |
-    |- CV
+    |- CV (Training logs)
         |- pilot (folder for hyperparameter search)
             |- bs_128_do_0_cs_1
                 |- train_loss.txt

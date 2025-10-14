@@ -150,6 +150,19 @@ Table 1: Selected aggregated values of scPDB (v.2017):
 
 ## Data Preprocessing
 
+Table 2: Rules (atom types) used for chemical feature descriptors: DeepSite
+[17] / modified for this paper
+| Channel  | DeepSite [17] Rule | Modified Rule |
+| -------- | ------------------ | ------------- |
+| Hydrophobic | atom type C or A | atom types C, C.ar, N.ar |
+| Aromatic | atom type A | atom types C.ar, N.ar |
+| Hydrogen bond acceptor | atom type NA or NS or OA or OS or SA | atom types N, O, S |
+| Hydrogen bond donor | atom type HD or HS with O or N partner | atom type H with N, O, S partner |
+| Positive ionizable | atom with positive charge | atom with positive charge | 
+| Negative ionizable | atom with negative charge | atom with negative charge |
+| Metal | atom type MG or ZN or MN or CA or FE | every metal atom |
+| Excluded volume | all atom types | all atom types except for placeholders |
+
 Each protein structure is treated as a three-dimensional image with a resolution of 1 ×
 1 × 1 Å3 or 2 × 2 × 2 Å3 per voxel (as the mean resolution of 3D structures appeared to be around 2Å, it is worth testing both voxel sizes). A voxel (volumetric pixel) is the 3D analog of a 2D pixel, representing a value on a regular three-dimensional grid.
 Just as pixels in standard images contain color information for different channels (e.g.,
@@ -167,37 +180,6 @@ values - a continuous occupancy score, defined as:
 \[
 n(r) = 1 - \exp\left(-\left(\frac{r_{\text{vdw}}}{r}\right)^{12}\right)
 \]
-
-
-Convolutional Neural Networks 7
-Channel DeepSite [17] Rule Modified Rule
-Hydrophobic atom type C or A atom types C, C.ar, N.ar
-Aromatic atom type A atom types C.ar, N.ar
-Hydrogen bond acceptor atom type NA or NS or OA or OS or SA atom types N, O, S
-Hydrogen bond donor atom type HD or HS with O or N partner atom type H with N, O, S partner
-Positive ionizable atom with positive charge atom with positive charge
-Negative ionizable atom with negative charge atom with negative charge
-Metal atom type MG or ZN or MN or CA or FE every metal atom
-Excluded volume all atom types all atom types except for placeholders
-Table 2: Rules (atom types) used for chemical feature descriptors: DeepSite
-[17] / modified for this paper
-to be around 2Å, it is worth testing both voxel sizes). A voxel (volumetric pixel) is
-the 3D analog of a 2D pixel, representing a value on a regular three-dimensional grid.
-Just as pixels in standard images contain color information for different channels (e.g.,
-RGB), each protein voxel contains spatial/chemical information. For this paper 8 channels
-are chosen (suggested in the DeepSite): hydrophobic, aromatic, hydrogen bond acceptor,
-hydrogen bond donor, positive ionizable, negative ionizable, metal, and excluded volume.
-These features are assigned to atoms by analyzing Tripos Mol2 files [32] of proteins - a
-widely used format with descriptions of atoms, bonds, and substructures. Although the
-DeepSite authors used an external tool to extract atom properties (AutoDock4, [27]),
-I use simpler heuristics. The table with AutoDock4 atom types (DeepSite) and Tripos
-SYBYL atom types associated with channels can be found in the Table 2.
-Folowing the DeepSite idea, I also use a spacial metric to estimate the voxel channel
-values - a continuous occupancy score, defined as:
-
-$$
-n(r) = 1 - \exp\left(-\left(\frac{r_{\text{vdw}}}{r}\right)^{12}\right)
-$$
 
 where rvdw denotes the Van der Waals radius of an atom — i.e., the distance at which
 another atom can approach without significant repulsion [28] — and r is the Euclidean

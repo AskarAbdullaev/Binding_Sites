@@ -349,7 +349,7 @@ TBA
 ## Domain-Specific Results
 
 TBA
-(As I have the sparate test set, not intersectig with CV data, I will test the resulting model with DCC and DVO metrics. When ready, I can compare it to DeepSite results and FPocket results)
+(As I have the separate test set, not intersecting with CV data, I will test the resulting model with DCC and DVO metrics. When ready, I can compare it to DeepSite results and FPocket results)
 
 ## Conclusion and Discussion
 

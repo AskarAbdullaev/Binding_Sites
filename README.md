@@ -200,7 +200,7 @@ highest occupancy score. This results in an 8-channel representation of each vox
 on the most relevant nearby atom.
 
 The computational burden of a naive computation would have the computational com-
-plexity for one protein O(N · A3/V3), where N - the number of atoms per protein; A -
+plexity for one protein $O(N · A3/V3)$, where N - the number of atoms per protein; A -
 the maximum span of coordinates; V - the chosen voxel size. To decrease the complexity,
 I make use of the float32 format, which will be used for the model. The resolution of
 torch.float32 datatype is 1.2 · 10−6, thus:
@@ -218,13 +218,13 @@ on the occupancy scores of voxels. However, the majority of protein structures i
 were obtained by X-ray with mean resolution around 2Å. According to Helliwell et al.
 [15], the linear uncertainty of such a method is 0.1-0.3Å, which means 0.3Å distance
 uncertainty, and I can safely approximate the formula as r ≤ 3 · rvdw. Supposing that
-the atom center belongs to a voxel (xa, ya, za), the maximum effective span would be
-1 + ⌊(3 · rvdw − V/2)/V⌋ in every direction, where V - voxel size.
+the atom center belongs to a voxel $(x_a, y_a, z_a)$, the maximum effective span would be
+$1 + ⌊(3 · r_{vdw} − V/2)/V⌋$ in every direction, where V - voxel size.
 The example of original and voxelized layouts for the structure ’2z08_1’ can be seen in
 Figure 1.
 
 To limit and standardize the input size of the model and focus on the local structure,
-the protein grid is divided into cubic subgrids of size 16 × 16 × 16 Å3 (16 or 8 voxels per
+the protein grid is divided into cubic subgrids of size 16 × 16 × 16 $Å^3$ (16 or 8 voxels per
 side depending on voxel size). The entire protein grid is padded with an 8 Å margin in
 each direction to ensure that each protein voxel appears in the central part of at least
 one subgrid.

@@ -95,10 +95,11 @@ Homo sapiens.
 in the database
 6. About 20% of binding sites contain metal atoms (mostly Mg, Zn or Mn) and only
 9% contain co-factors (mostly NAP, FAD or NDP)
-7. There on average 36 residues per binding site, with mean volume being around 800
-3.
+7. There on average 36 residues per binding site, with mean volume being around 800 Å³
 8. Cavities have Hydrophobic and Polar regions on average in the same proportion.
+
 Ligand properties are not of much interest to us in the scope of this paper.
+
 To prevent erroneous evaluation, only a single example featuring the distinct protein
 structure (unique UniProt ID). 25% of samples (1172) are held-out for the final test set
 to compute the domain specific-metrics.
@@ -143,6 +144,10 @@ feasible.
 | Ligand Cationic Atoms (mean)                    | 0.35                                                                 |
 | Ligand Rule of Five Violation (mean)            | 1.12                                                                 |
 | Ligand Rotatable Bonds (mean)                   | 7.83                                                                 |
+
+
+## Data Preprocessing
+
 
 ## References
 

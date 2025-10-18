@@ -28,7 +28,7 @@ For this project I used the following modules:
 |- all_scpdb_entries.txt (list of all scPDB entries as of Sep.'25)
 |- excluded_scpdb_entries.txt (entries that are filtered out during preprocessing)
 |- decode.npy (decoder of atom properties)
-|- orogonal_split.txt (data split provided in DeepSite supplementary files)
+|- original_split.txt (data split provided in DeepSite supplementary files)
 |
 |- data_utilities.py (utilities for the 'load_and_process' notebook)
 |- load_and_process.ipynb (notebook for data loading and preprocessing)

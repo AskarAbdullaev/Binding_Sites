@@ -419,6 +419,8 @@ Thus, 4 models in total are trained and evaluated over 5 balanced and unique fol
 2. CNN (voxel size 2), 1321861 parameters
 3. Linear (voxel size 1), 32769 parameters
 4. Linear (voxel size 2), 4097 parameters
+
+
 The training is done using 128 batch size, 12 epochs with patience 3, the Adam optimizer
 [16] and BCE loss with logits. The training of all the 4 models takes around 30 hours on
 the 12-core CPU (2023).

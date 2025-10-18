@@ -453,7 +453,7 @@ epoch by test loss) with confidence interval margins (p=0.05)
 Table 4: Evaluation metrics of models based on 5-fold cross-validation. All
 confidence intervals are computed using p=.05, random baseline as-
 sumes balanced dataset.
-| model_name   |   voxel_size |   mean_best_epoch |   best_mean_loss | aps_print         | aucroc_print      |   mean_accuracy |   mean_f1 |
+| Model        |   Voxel Size |  Best Epoch (avg) |  Best Loss (avg) | AP                | ROC AUC           |   Accuracy      |  F1       |
 |:-------------|-------------:|------------------:|-----------------:|:------------------|:------------------|----------------:|----------:|
 | cnn          |            1 |                 8 |         0.0810   | 0.9945 ± 0.0017   | 0.9949 ± 0.0012   |        0.9722   |  0.9743   |
 | cnn          |            2 |                 3 |         0.6396   | 0.6653 ± 0.0467   | 0.6961 ± 0.0527   |        0.6301   |  0.6728   |

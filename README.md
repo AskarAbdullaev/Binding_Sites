@@ -33,8 +33,10 @@ For this project I used the following modules:
 |- data_utilities.py (utilities for the 'load_and_process' notebook)
 |- load_and_process.ipynb (notebook for data loading and preprocessing)
 |
-|- sample_and_train_utilities.py (utilities for sample_and_train' notebook)
+|- sample_and_train_utilities.py (utilities for 'sample_and_train' and 'cross_validation' notebooks)
 |- sample_and_train.ipynb (notebook for voxelization, sampling and hyperparameters search)
+|
+|- cross_validation.ipynb (notebook for cross-validation and final training)
 |
 |- Data 
     |

@@ -461,6 +461,8 @@ sumes balanced dataset.
 | linear       |            2 |                 4 |         0.6433   | 0.6770 ± 0.0211   | 0.7103 ± 0.0222   |        0.6511   |  0.7184   |
 | random       |            - |                 - |         0.6930   | 0.500             | 0.500             |        0.5      |  0.5      |
 
+Based on the cross-validation result, the bast model (CNN (1\text{\AA}) is then trained on the complete CV-subset to obtain the final model. The linear model (1\text{\AA}) is also trained on the complete CV-subset (as it showed surprisingly high evaluation results, it is worth keeping it for further stages).
+
 ## Domain-Specific Results
 
 TBA

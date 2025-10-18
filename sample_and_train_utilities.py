@@ -5,6 +5,7 @@ from itertools import product
 
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
 from tqdm import tqdm
 from matplotlib import pyplot as plt
@@ -12,7 +13,12 @@ from matplotlib.patches import Patch
 
 import torch
 from torch.utils.data import DataLoader, Dataset
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+from sklearn.metrics import (
+    roc_auc_score, average_precision_score,
+    precision_recall_curve, roc_curve, confusion_matrix,
+    accuracy_score, f1_score, precision_score, recall_score,
+    classification_report
+)
 
 
 DECODER = np.load('decode.npy')
@@ -338,7 +344,7 @@ def visualize_voxels(scpdb_id: str,
                         s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2)
 
         for channel, channel_id in zip(channels, channels_ids):
-            if atoms[x, y, z, channel_id] > 10 ** (-3):
+            if atoms[x, y, z, channel_id] > 10 ** (-7):
                 ax.scatter(x, y, z, marker='h', color=channel_colours[channel],
                             alpha=atoms[x, y, z, channel_id],
                             s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2,
@@ -655,6 +661,8 @@ def train_evaluate(model: torch.nn.Module,
                    epochs: int = 5,
                    pos_weight: float | int = 1,
                    patience: int = 3,
+                   save_model: bool = False,
+                   model_path: str = './model.pt',
                    device: str = 'cpu') -> tuple:
     """
     Training-evaluation loop
@@ -666,6 +674,8 @@ def train_evaluate(model: torch.nn.Module,
         epochs (int, optional): epochs to train for. Defaults to 5.
         pos_weight (float | int, optional): weight of positive samples. Defaults to 1.
         patience (int, optional): how many epochs with non-decresing test loss are tolerated before early stop is triggered. Defaults to 3.
+        save_model (bool, optional): allows to save the model. Defaults to False.
+        model_path (str, optional): a path to store model to. Defaults to './model.pt'.
         device (str, optional): device to use Defaults to 'cpu'.
 
     Returns:
@@ -675,12 +685,14 @@ def train_evaluate(model: torch.nn.Module,
     # Check the input
     assert isinstance(model, torch.nn.Module), f'model must be a subclass of torch.nn.Module, not {type(model)}'
     assert isinstance(train_loader, DataLoader), f'train_loader must be a torch DataLoader, not {type(train_loader)}'
-    assert isinstance(test_loader, DataLoader), f'test_loader must be a torch DataLoader, not {type(test_loader)}'
+    assert isinstance(test_loader, DataLoader | None), f'test_loader must be a torch DataLoader, not {type(test_loader)}'
     assert isinstance(epochs, int), f'epochs must be int, not {type(epochs)}'
     assert epochs > 0, f'epochs must be positive, not {type(epochs)}'
     assert isinstance(patience, int), f'patience must be int, not {type(patience)}'
     assert patience > 0, f'patience must be positive, not {type(patience)}'
     assert isinstance(pos_weight, int | float), f'pos_weight must be float or int, not {type(pos_weight)}'
+    assert isinstance(save_model, bool), f'save_model must be bool, not {type(save_model)}'
+    assert isinstance(model_path, str), f'model_dir must be str, not {type(model_path)}'
     assert device in {'cpu', 'mps', 'cuda'}, f"unknown device '{device}', consider: 'cpu', 'mps', 'cuda'"
 
 
@@ -702,12 +714,14 @@ def train_evaluate(model: torch.nn.Module,
 
     epochs_no_improvement = 0
     best_test_loss = np.inf
+    test_loss_of_saved_model = np.inf
 
     # Iterate for every epoch
     for epoch in range(epochs):
 
         train_loss = 0
         test_loss = 0
+        model.train()
 
         with tqdm(total=len(train_loader), desc=f'Training Epoch {epoch+1}: ') as pbar:
 
@@ -742,66 +756,74 @@ def train_evaluate(model: torch.nn.Module,
             train_loss_per_epoch.append(train_loss / len(train_loader))
 
 
-        # Evaluation
-        with torch.no_grad():
+         # Evaluation
+        if test_loader is not None:
 
-            y_true = []
-            y_pred = []
+            model.eval()
 
-            with tqdm(total=len(test_loader), desc=f'Testing Epoch {epoch+1}: ') as pbar:
+            with torch.no_grad():
 
-                for i, (x, y, w) in enumerate(test_loader):
+                y_true = []
+                y_pred = []
 
-                    # Load data to device
-                    x.to(device)
-                    y.to(device)
+                with tqdm(total=len(test_loader), desc=f'Testing Epoch {epoch+1}: ') as pbar:
+
+                    for i, (x, y, w) in enumerate(test_loader):
+
+                        # Load data to device
+                        x.to(device)
+                        y.to(device)
+                        
+                        # Forward pass
+                        y_hat = model(x)
+
+                        # Loss computation (with individual weights)
+                        loss = loss_function(y_hat.type(torch.float32),
+                                            y.reshape(-1, 1).type(torch.float32))
+                        loss = (loss * w).mean()
+
+                        # Collecting loss, true labels and predictions
+                        test_loss += loss.detach().item()
+                        y_true.extend(y.flatten().tolist())
+                        y_pred.extend(y_hat.detach().flatten().tolist())
+
+                        # Updating the progress bar
+                        pbar.update(1)
+                        pbar.set_description(f'Testing Epoch {epoch+1}: mean loss: {test_loss / ((i+1) * test_loader.batch_size):.3g}')
                     
-                    # Forward pass
-                    y_hat = model(x)
+                    # Collecting logs
+                    test_loss_per_epoch.append(test_loss / len(test_loader))
 
-                    # Loss computation (with individual weights)
-                    loss = loss_function(y_hat.type(torch.float32),
-                                         y.reshape(-1, 1).type(torch.float32))
-                    loss = (loss * w).mean()
+            # Storing labels and predictions (after sigmoid) to analyse later
+            true_per_epoch.append(np.array(y_true))
+            predictions_per_epoch.append(1/(1 + np.exp(-np.array(y_pred))))
 
-                    # Collecting loss, true labels and predictions
-                    test_loss += loss.detach().item()
-                    y_true.extend(y.flatten().tolist())
-                    y_pred.extend(y_hat.detach().flatten().tolist())
+            # For now we will just use a threshold of 0.5 to get some idea
+            y_true = np.array(y_true)
+            y_pred = np.array(y_pred)
+            y_pred = 1/(1 + np.exp(-y_pred))
+            y_pred[y_pred >= 0.5] = 1
+            y_pred[y_pred < 0.5] = 0
 
-                     # Updating the progress bar
-                    pbar.update(1)
-                    pbar.set_description(f'Testing Epoch {epoch+1}: mean loss: {test_loss / ((i+1) * test_loader.batch_size):.3g}')
-                
-                # Collecting logs
-                test_loss_per_epoch.append(test_loss / len(test_loader))
+            # Use sklearn to see the progress in evaluation with each epoch
+            print(f'\nSklearn Metrics for Epoch {epoch+1}')
+            print('Accuracy:', classification_report(y_true, y_pred, output_dict=True)['accuracy'])
+            cm = pd.DataFrame(confusion_matrix(y_true, y_pred), index=['true 0', 'true 1'], columns=['pred 0', 'pred 1'])
+            print(cm)
+            print()
 
-        # Storing labels and predictions (after sigmoid) to analyse later
-        true_per_epoch.append(np.array(y_true))
-        predictions_per_epoch.append(1/(1 + np.exp(-np.array(y_pred))))
-
-        # For now we will just use a threshold of 0.5 to get some idea
-        y_true = np.array(y_true)
-        y_pred = np.array(y_pred)
-        y_pred = 1/(1 + np.exp(-y_pred))
-        y_pred[y_pred >= 0.5] = 1
-        y_pred[y_pred < 0.5] = 0
-
-        # Use sklearn to see the progress in evaluation with each epoch
-        print(f'\nSklearn Metrics for Epoch {epoch+1}')
-        print('Accuracy:', classification_report(y_true, y_pred, output_dict=True)['accuracy'])
-        cm = pd.DataFrame(confusion_matrix(y_true, y_pred), index=['true 0', 'true 1'], columns=['pred 0', 'pred 1'])
-        print(cm)
-        print()
-
-        if test_loss_per_epoch[-1] < best_test_loss:
-            epochs_no_improvement = 0
-            best_test_loss = test_loss_per_epoch[-1]
-        else:
-            epochs_no_improvement += 1
+            if test_loss_per_epoch[-1] < best_test_loss:
+                epochs_no_improvement = 0
+                best_test_loss = test_loss_per_epoch[-1]
+            else:
+                epochs_no_improvement += 1
+            
+            if epochs_no_improvement >= patience:
+                break
         
-        if epochs_no_improvement >= patience:
-            break
+        # Store the model if required
+        if save_model and test_loss_of_saved_model <= best_test_loss:
+            torch.save(model, model_path)
 
     # Return losses per epoch and also true and predicted logits for future analysis of the test part
     return train_loss_per_epoch, test_loss_per_epoch, true_per_epoch, predictions_per_epoch
@@ -938,7 +960,6 @@ class FlexibleCNN3D(torch.nn.Module):
     def forward(self, x):
         return self.model(x)
     
-
 
 def hyperparameter_search(train_folds: Collection[int|str],
                          test_folds: Collection[int|str],
@@ -1192,3 +1213,297 @@ def analyse_hyperparameters(dir: str = 'Data/CV/pilot') -> pd.DataFrame:
     return stats
         
 
+def analyse_runs(dir: str = "Data/CV",
+                 out_dir: str = "Data/CV/analysis") -> pd.DataFrame:
+    """
+    Analysis of CV logs from 'dir' (Data/CV by default):
+    - computed AUC ROC, APS, Accuracy, F1 for every model/fold/epoch;
+    - plots the loss values for every model and epoch with Confidence intervals over folds;
+    - Plots the barplots with wiskers for AUC ROC and APS of the best loss epochs;
+    - Prints down a summary for the models;
+    - Returns the summary df
+
+    Args:
+      dir (str, optional): path the CV directory. Defaults to Data/CV.
+      out_dir (str, optional): path to store aggregated CSVs and plots. Defaults to Data/CV/analysis.
+
+    Returns:
+        pd.DataFrame (summary)
+    """
+
+    base_dir = Path(dir)
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    runs = [p for p in base_dir.iterdir() if p.is_dir() and p.name.startswith("vs_")]
+    if not runs:
+        print("No runs found!")
+        return None
+    
+    fold_epoch_df = []
+
+    # Iterate over runs found
+    for run in runs:
+
+        run_name = run.name
+        _, voxel_size, model_name = run_name.split("_")
+
+        # Collect folds folders (sorry for tautology)
+        folds = sorted([d for d in run.iterdir() if d.is_dir() and d.name.isdigit()],
+                        key=lambda p: int(p.name))
+        if not folds:
+            print(f'No fold folders found in run "{run_name}"')
+            continue
+
+        for fold in folds:
+
+            # Reading losses
+            with open(fold / "train_loss.txt", "r") as f:
+                tr_losses = [float(x.strip()) for x in f.read().split('\n') if str(x).strip() != ""]
+                tr_losses = np.array(tr_losses, dtype=float) if len(tr_losses) else None
+
+            with open(fold / "test_loss.txt", "r") as f:
+                te_losses = [float(x.strip()) for x in f.read().split('\n') if str(x).strip() != ""]
+                te_losses = np.array(te_losses, dtype=float) if len(te_losses) else None
+
+            # predictions & labels
+            predictions_path = fold / "predictions.npy"
+            true_labels_path  = fold / "true_labels.npy"
+
+            if not (predictions_path.exists() and true_labels_path.exists()):
+                print(f"Predictions or true_labels not found for fold {int(fold.name)}")
+                continue
+
+            y_score = np.load(predictions_path)
+            y_true  = np.load(true_labels_path)
+
+            for i, (tl, vl, true, preds) in enumerate(zip(tr_losses, te_losses, y_true, y_score)):
+
+                metrics = {}
+
+                try:
+                    metrics["aucroc"] = roc_auc_score(true, preds)
+                except Exception:
+                    metrics["aucroc"] = np.nan
+                
+                try:
+                    metrics["aps"] = average_precision_score(true, preds)
+                except Exception:
+                    metrics["aps"] = np.nan
+
+                preds = (preds >= 0.5).astype(int)
+                metrics["accuracy"] = accuracy_score(true, preds)
+                metrics["precision"] = precision_score(true, preds, zero_division=0)
+                metrics["recall"] = recall_score(true, preds, zero_division=0)
+                metrics["f1"] = f1_score(true, preds, zero_division=0)
+
+                fold_epoch_df.append({
+                    "run": run_name,
+                    "model_name": model_name,
+                    "voxel_size": voxel_size,
+                    "fold_id": int(fold.name),
+                    "epoch": i + 1,
+                    "train_loss": tl,
+                    "test_loss": vl,
+                    **metrics
+                })
+
+        
+    fold_epoch_df = pd.DataFrame(fold_epoch_df)
+    fold_epoch_df.to_csv(out_dir / "metrics_per_epoch.csv", index=False)
+
+    # I choose the best epoch by test_loss
+    idx_best = fold_epoch_df.groupby(["run", "fold_id"])["test_loss"].idxmin()
+    best_epochs_df = fold_epoch_df.loc[idx_best].copy().reset_index(drop=True)
+    best_epochs_df.sort_values(["run", "fold_id"], inplace=True)
+    best_epochs_df.to_csv(out_dir / "best_epoch_per_fold.csv", index=False)
+
+    # Plot the runs
+    all_runs = best_epochs_df['run'].unique()
+    max_epochs = fold_epoch_df['epoch'].max() - 1
+    max_loss = max(fold_epoch_df['train_loss'].max(), fold_epoch_df['test_loss'].max())
+    best_loss = fold_epoch_df['test_loss'].min()
+    best_run = best_epochs_df.loc[best_epochs_df['test_loss'] == best_loss, 'run'].item()
+
+    fig, axs = plt.subplots(ncols=2, nrows=(int(len(all_runs) % 2 > 0) + (len(all_runs) // 2)),
+                            sharex=True, sharey=True,
+                            figsize=(8, 8))
+
+
+    # Now I plot the runs with train loss and test loss shown as average per fold with Confidence interval margins
+    for i, run in enumerate(all_runs):
+
+        # Get the necessary slice
+        run_df = fold_epoch_df.loc[fold_epoch_df['run'] == run, ["train_loss", "test_loss", "epoch", "fold_id"]]
+
+        # Calculate mean and std per epoch
+        train_std = run_df[["train_loss", "epoch"]].groupby("epoch").std()
+        train_std.fillna(0.001, inplace=True)
+        train_mean = run_df[["train_loss", "epoch"]].groupby("epoch").mean()
+        test_std = run_df[["test_loss", "epoch"]].groupby("epoch").std()
+        test_std.fillna(0.001, inplace=True)
+        test_mean = run_df[["test_loss", "epoch"]].groupby("epoch").mean()
+
+        # Get the CI margins
+        train_lower_bound = train_mean - 1.96 * train_std
+        train_upper_bound = train_mean + 1.96 * train_std
+        test_lower_bound = test_mean - 1.96 * test_std
+        test_upper_bound = test_mean + 1.96 * test_std
+
+        # Store everything in the dict
+        run_df = run_df.groupby("epoch").mean()
+        run_df = run_df.sort_values(by='epoch')
+        run_dict = {
+            'train_losses': train_mean['train_loss'].to_list(),
+            'test_losses': test_mean['test_loss'].to_list(),
+            'train_lower_bound': train_lower_bound['train_loss'].to_list(),
+            'train_upper_bound': train_upper_bound['train_loss'].to_list(),
+            'test_lower_bound': test_lower_bound['test_loss'].to_list(),
+            'test_upper_bound': test_upper_bound['test_loss'].to_list(),
+            'voxel_size': run.split('_')[1],
+            'model_name': run.split('_')[2],
+            'epochs': len(train_mean['train_loss'])
+        }
+
+        # Take the ax
+        ax = axs[i//2][i%2]
+
+        # Plot train losses and test losses with CI margins
+        ax.plot(run_dict['train_losses'], c='orange', label='Train Loss (mean ± 95% CI)')
+        ax.fill_between(np.arange(run_dict['epochs']),
+                        run_dict['train_lower_bound'],
+                        run_dict['train_upper_bound'],
+                        alpha=0.25, color='orange')
+        ax.plot(run_dict['test_losses'], c='grey', label='Test Loss (mean ± 95% CI)')
+        ax.fill_between(np.arange(run_dict['epochs']),
+                        run_dict['test_lower_bound'],
+                        run_dict['test_upper_bound'],
+                        alpha=0.25, color='grey')
+
+        # Plot dashed lines of best epoch / best test loss
+        color = 'black' if run != best_run else 'red'
+        ax.plot([np.argmin(run_dict['test_losses']),np.argmin(run_dict['test_losses'])], [0, max_loss], c=color, linestyle='--', linewidth=0.5)
+        ax.plot([0, max_epochs], [min(run_dict['test_losses']), min(run_dict['test_losses'])], c=color, linestyle='--', linewidth=0.5)
+
+        # Set limits
+        ax.set_xlim([0, max_epochs])
+        ax.set_ylim([0, max_loss])
+
+        # Set title, legend and appropriate epoch ticks
+        ax.legend()
+        ax.set_title(f'Model: {run_dict["model_name"].upper()}, Voxel Size: {run_dict["voxel_size"]}')
+        ax.set_xticks(np.arange(0, max_epochs, 3))
+        ax.set_xticklabels([str(tick+1) for tick in ax.get_xticks()])
+
+    # Add suptitle and show the result
+    fig.suptitle('Train and Test losses per model.\n(Early stop is triggered with patience 3; Loss is in units per sample)')
+    plt.tight_layout()
+    plt.show()
+
+    # Aggregate APS and AUC ROC, F1, Accuracy
+
+    def confidence_interval(s):
+        """
+        Helper function to create a confidence interval (with 95% significance level)
+        """
+
+        x = pd.Series(s, dtype=float).dropna()
+        if len(x) == 0:
+            return (np.nan, np.nan)
+        m  = x.mean()
+        se = x.std(ddof=1) / np.sqrt(len(x)) if len(x) > 1 else 0.0
+        z  = 1.96
+        delta = z * se
+        return (m - z*se, m + z*se, delta)
+    
+    agg = []
+    for run, g in best_epochs_df.groupby("run"):
+
+        # A wrapper for CI computation
+        def mean_and_ci(column):
+            m = g[column].mean()
+            lo, hi, d = confidence_interval(g[column])
+            return m, lo, hi, d
+
+        # Get aggrageted metrics
+        mean_aps, low_aps, high_aps, delta_aps = mean_and_ci("aps")
+        mean_aucroc, low_aucroc, high_aucroc, delta_aucroc = mean_and_ci("aucroc")
+        mean_acc = g["accuracy"].mean()
+        mean_f1 = g["f1"].mean()
+        model_name = g["model_name"].iloc[0]
+        voxel_size = g["voxel_size"].iloc[0]
+        folds_used = g.shape[0]
+        mean_epoch = int(np.round(g["epoch"].mean(), 0))
+        best_mean_loss = g["test_loss"].mean().min()
+
+        agg.append({
+            "run": run,
+            "model_name": model_name,
+            "voxel_size": voxel_size,
+            "folds": folds_used,
+            "mean_best_epoch": mean_epoch,
+            "best_mean_loss": best_mean_loss,
+            "mean_aps": mean_aps,
+            "ci_aps_low": low_aps,
+            "ci_aps_high": high_aps,
+            "ci_aps_delta": delta_aps,
+            "aps_print": f'{mean_aps:.5g} ± {delta_aps:.3g}',
+            "mean_aucroc": mean_aucroc,
+            "ci_aucroc_low": low_aucroc,
+            "ci_aucroc_high": high_aucroc,
+            "ci_aucroc_delta": delta_aucroc,
+            "aucroc_print": f'{mean_aucroc:.5g} ± {delta_aucroc:.3g}',
+            "mean_accuracy": mean_acc,
+            "mean_f1": mean_f1
+        })
+
+
+    # A special line for random baseline
+    agg.append({
+            "run": 'random',
+            "model_name": 'random',
+            "folds": 5,
+            "best_mean_loss": '0.693',
+            "mean_aps": '-',
+            "aps_print": '0.500',
+            "aucroc_print": '0.500',
+            "mean_accuracy": '0.500',
+            "mean_f1": '0.500'
+        })
+    
+    # Create a summary
+    summary = pd.DataFrame(agg).sort_values(["model_name", "voxel_size"])
+    summary.to_csv(out_dir / "summary_by_run.csv", index=False)
+    print(summary[['model_name', 'voxel_size', 'mean_best_epoch', 'best_mean_loss', 'aps_print', 'aucroc_print', 'mean_accuracy', 'mean_f1']].to_markdown(index=False))
+
+    def barplot(df=summary.loc[summary['run'] != 'random'], metric='aps'):
+        """
+        A helper function to create a barplot with whiskers for a given metric
+        """
+
+        x = np.arange(len(df))
+
+        # Extract mean and whiskers
+        mean = df['mean_' + metric].values
+        error = np.vstack([df[f'ci_{metric}_delta'].values, df[f'ci_{metric}_delta'].values])
+
+        # Plot
+        fig, ax = plt.subplots(figsize=(max(6, 1.2*len(df)), 4), dpi=220)
+        ax.bar(x, mean, yerr=error, capsize=3)
+        ax.set_xticks(x, df["run"].apply(lambda x: f"{x.split('_')[-1].upper()}, voxel size: {x.split('_')[1].upper()}"), rotation=25, ha="right")
+        ax.set_ylabel(f"{metric.replace('_',' ').upper()} (mean ± 95% CI)")
+        ax.set_title(f"Cross-run comparison — {metric.upper()}")
+
+        # Add a baseline
+        ax.axhline(0.5, color="red", ls="--", lw=1.5, label=f"Baseline (random) {metric.upper()}")
+
+        ax.legend()
+        fig.tight_layout()
+        fig.savefig(out_dir / f'{metric}.png', dpi=220)
+
+        plt.show()
+    
+    # Create parplots for Average precision and AUC
+    barplot(metric="aps")
+    barplot(metric="aucroc")
+
+    return summary

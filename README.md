@@ -22,6 +22,8 @@ For this project I used the following modules:
 
 ```text
 ./
+|- final_linear.pt (final linear model)
+|- final_cnn.pt (final CNN model)
 |
 |- all_scpdb_entries.txt (list of all scPDB entries as of Sep.'25)
 |- excluded_scpdb_entries.txt (entries that are filtered out during preprocessing)
@@ -76,6 +78,7 @@ For this project I used the following modules:
             |- ... (other voxelized entries with voxel size 2)
     |
     |- CV (Training logs)
+        |- analysis (folder with aggregated CSVs)
         |- pilot (folder for hyperparameter search)
             |- bs_128_do_0_cs_1
                 |- train_loss.txt
@@ -83,6 +86,17 @@ For this project I used the following modules:
                 |- true_labels.npy
                 |- predictions.npy
             |- ... (other hyperparameter combinations)
+        |
+        |- vs_1_cnn
+            |- params.csv (parameters of the run)   
+            |- 0
+                |- train_loss.txt
+                |- test_loss.txt
+                |- true_labels.npy
+                |- predictions.npy
+            |- ... (other folds)
+        |
+        |- ... (other models)
 ```
 
 ## Introduction

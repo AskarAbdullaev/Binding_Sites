@@ -1,0 +1,15 @@
+Parameter	Value
+Reduction Factor	2
+Augmented	False
+Partially	1
+N/P ratio	1
+Voxel Size	2
+Distance Measure	euclidean
+Distance Threshold	4
+Channels Used	all
+Batch Size	128
+Epochs	12
+Patience	3
+Shuffle Train	True
+Seed	1234
+Name	cnn

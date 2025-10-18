@@ -436,6 +436,14 @@ the relatively simple Linear model (1Å) shows around 90% AUC score, while conta
 40 times less parameters than 3D CNN (1Å). The summary of model evaluations can be
 found in in Table 4.
 
+Listing 2: Linear model architecture.
+```python
+torch.nn.Sequential(
+    torch.nn.Flatten(),
+    torch.nn.Linear((16 // self.voxel_size) ** 3 * 8, 1),
+)
+```
+
 Figure 3. Loss per epoch for every trained model. Dashed lines indicate the
 best mean loss. Red dashed lines - the best over all the models. The
 semi-transparent margins indicate the confidence interval (p=0.05)

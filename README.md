@@ -409,8 +409,55 @@ triggered after 3 non-improving epochs.
 
 ## Cross-Validation
 
-TBA
-(Here I will run 5-fold CV for voxel sizes [1, 2] for 3DCNN and linear regression as a baseline. Then I will compare them and choose the best performing model. When the best model is chosen, it will be retrained on the complete data)
+As mentioned before, there are 2 model architectures that are trained: Deep 3D-CNN
+with voxel sizes of 1Å and 2Å. To estimate the required complexity, I have decided to also
+train and evaluate the linear models with the architecture that can be seen in Listing 2.
+Such models only have 32769 or 4097 trainable parameters depending on the voxel size
+(much less compared to Table 3).
+Thus, 4 models in total are trained and evaluated over 5 balanced and unique folds:
+1. CNN (voxel size 1), 1409505 parameters
+2. CNN (voxel size 2), 1321861 parameters
+3. Linear (voxel size 1), 32769 parameters
+4. Linear (voxel size 2), 4097 parameters
+The training is done using 128 batch size, 12 epochs with patience 3, the Adam optimizer
+[16] and BCE loss with logits. The training of all the 4 models takes around 30 hours on
+the 12-core CPU (2023).
+For every model the train and test losses are summarized using the mean and confidence
+intervals per epoch. As it can be observed from Figure 3, the CNN architecture with voxel
+size 1Å shows significantly lower test loss values after a proper number of epochs. Also,
+it appears that the models using voxel size 2Å performs worse than those with smaller
+voxels. Apparently, enlargement of voxels leads to the loss of 82,5% of spati0-chemical
+information, which negatively affects the performance.
+Although the superiority of CNN (1Å) is already clear, let’s also take a look at the ROC
+AUC scores and Average Precision scores of the 4 models: Figure 4, Figure 5. Surprisingly,
+the relatively simple Linear model (1Å) shows around 90% AUC score, while containing
+40 times less parameters than 3D CNN (1Å). The summary of model evaluations can be
+found in in Table 4.
+
+Figure 3. Loss per epoch for every trained model. Dashed lines indicate the
+best mean loss. Red dashed lines - the best over all the models. The
+semi-transparent margins indicate the confidence interval (p=0.05)
+<img width="790" height="789" alt="cv_losses" src="https://github.com/user-attachments/assets/37cb6d4c-60a7-4d63-af65-775fe789cc65" />
+
+AUC scores of the 4 models (evaluated at the best epoch by test
+loss) with confidence interval margins (p=0.05)
+<img width="1408" height="858" alt="cv_auc" src="https://github.com/user-attachments/assets/dfd0a8d4-a55d-4063-b7cd-14f9affa0efe" />
+
+
+Figure 5: Average Precision scores of the 4 models (evaluated at the best
+epoch by test loss) with confidence interval margins (p=0.05)
+<img width="1408" height="858" alt="cv_aps" src="https://github.com/user-attachments/assets/8cb154ff-35c5-4167-a384-6da589c917f4" />
+
+Table 4: Evaluation metrics of models based on 5-fold cross-validation. All
+confidence intervals are computed using p=.05, random baseline as-
+sumes balanced dataset.
+| model_name   |   voxel_size |   mean_best_epoch |   best_mean_loss | aps_print         | aucroc_print      |   mean_accuracy |   mean_f1 |
+|:-------------|-------------:|------------------:|-----------------:|:------------------|:------------------|----------------:|----------:|
+| cnn          |            1 |                 8 |         0.0810   | 0.9945 ± 0.0017   | 0.9949 ± 0.0012   |        0.9722   |  0.9743   |
+| cnn          |            2 |                 3 |         0.6396   | 0.6653 ± 0.0467   | 0.6961 ± 0.0527   |        0.6301   |  0.6728   |
+| linear       |            1 |                 5 |         0.4540   | 0.9277 ± 0.0052   | 0.9105 ± 0.0075   |        0.8193   |  0.8468   |
+| linear       |            2 |                 4 |         0.6433   | 0.6770 ± 0.0211   | 0.7103 ± 0.0222   |        0.6511   |  0.7184   |
+| random       |            - |                 - |         0.6930   | 0.500             | 0.500             |        0.5      |  0.5      |
 
 ## Domain-Specific Results
 

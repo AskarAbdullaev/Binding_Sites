@@ -797,6 +797,3 @@ issn: 1422-0067. doi: 10.3390/ijms232113568. Retrieved 03/28/2025 from https:
 Drug Design: Exploring Pocket Space. en. The AAPS Journal, 15, 1, (January
 2013), 228–241. issn: 1550-7416. doi: 10 . 1208 / s12248 - 012 - 9426 - 6. Retrieved
 03/28/2025 from http://link.springer.com/10.1208/s12248-012-9426-6.
-
-
->>>>>>> db676e4472fad7c79241feb275350b8d5cec7147

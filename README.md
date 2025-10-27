@@ -585,7 +585,7 @@ Table 5: DCC and DVO of CNN, linear and random models with various
 probability thresholds. StDev - Standard Deviation; CI - Confidence
 Interval; DCC 50% - Median value of DCC
 | Model        | CNN      | linear  | random   | CNN     | linear   | random  |
--------------------------------------------------------------------------------
+|--------------|----------|---------|----------|---------|----------|---------|
 | Threshold    | 0.7      | 0.7     | 0.7      | 0.8     | 0.8      | 0.8     |
 | DCC (Mean)   | 10.52    | 16.15   | 16.98    | 9.8     | 15.85    |  16.4   | 
 | DCC StDev    | 9.36     | 9.45    | 12.70    | 8.90    | 9.70     | 12.03   | 

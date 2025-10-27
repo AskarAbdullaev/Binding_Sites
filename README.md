@@ -560,9 +560,9 @@ ground-truth binding pockets. Both the protein and the predicted volume are disc
 into 1 × 1 × 1 Å^3 voxels. Convex hulls of the predicted and true pocket regions are
 computed, and the Jaccard index is calculated:
 
-\[
+$$
 J = \frac{|V_r \cap V_p|}{|V_r \cup V_p|}
-\]
+$$
 
 where Vr and Vp are the sets of voxels belonging to the real and predicted pockets,
 respectively (the voxel is considered to be in the convex hull if its center point is inside

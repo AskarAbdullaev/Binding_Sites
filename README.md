@@ -546,6 +546,13 @@ HDBSCAN and Convex Hull computation extends the inference time even further. Due
 to these limitations, only a half of the withheld test set (586 scPDB entries with unique
 UniProt IDs) are used, which takes arounf 30 hours on the available hardware.
 
+Figure 6: Voxelized volumetric map of probabilities after applying threshold
+0.5 (left) and 0.8 (right). Voxels that belong to the true pocket are
+highlighted with black borders. Note: only voxels with non-zero
+occupancy rendered for clearity. PDB: 3tku; scPDB: 3tku_1
+<img width="698" height="319" alt="v_map" src="https://github.com/user-attachments/assets/899dc174-c79f-400d-8c4c-dc985b4d0502" />
+
+
 ## Domain-Specific Results
 
 Both CNN and linear models are evaluated using two primary metrics: the Distance to
@@ -574,8 +581,39 @@ voxel proportion as the CNN model does. Consequently, all the following inferenc
 are applied as usual to get the metrics (DCC and DVO). For reproducibility purpose,
 the random baseline utilizes a fixed random seed.
 
-TBA
-(plots)
+Table 5: DCC and DVO of CNN, linear and random models with various
+probability thresholds. StDev - Standard Deviation; CI - Confidence
+Interval; DCC 50% - Median value of DCC
+| Model        | CNN      | linear  | random   | CNN     | linear   | random  |
+-------------------------------------------------------------------------------
+| Threshold    | 0.7      | 0.7     | 0.7      | 0.8     | 0.8      | 0.8     |
+| DCC (Mean)   | 10.52    | 16.15   | 16.98    | 9.8     | 15.85    |  16.4   | 
+| DCC StDev    | 9.36     | 9.45    | 12.70    | 8.90    | 9.70     | 12.03   | 
+| DCC CI (95%) | ± 0.031  | ± 0.032 | ± 0.043  | ± 0.030 | ± 0.032  | ± 0.040 | 
+| DCC 50%      | 6.9      | 14.2    | 13.3     | 6.5     | 13.8     | 12.7    | 
+| DVO Mean     | 0.329    | 0.117   | 0.053    | 0.340   | 0.156    | 0.047   | 
+| DVO StDev    | 0.203    | 0.108   | 0.030    | 0.197   | 0.142    | 0.026   | 
+| DVO CI (95%) | ± 0.0007 | ± 0.0004| ± 0.0001 | ± 0.0007| ± 0.0005 | ± 0.0001|
+
+
+As can it can be observed in Figure 7 (top), the CNN model shows significantly higher
+performance than the linear model and the random model, reaching 50% succes rate at
+threshold 6.5Å. Surprisingly, the linear model, which produces decent metrics at cross-
+validation stage, fails to surpass even the random baseline in DCC. In terms of DVO
+(Figure 7, bottom) the CNN model also outperforms the linear model. To be statistically
+precise, Wilcoxon signed rank-test (which is applied because both DCC and DVO are
+not normally distributed) shows the following results:
+
+- DCC of CNN < random baseline DCC: p = 2 · 10−121
+- DCC of Linear model is not significantly better than random baseline: p = 0.114
+- DCC of CNN < DCC of Linear model: p = 5.3 · 10−119
+- DVO of CNN > random baseline DVO: p = 2.1 · 10−190
+- DVO of Linear model > random baseline DVO: p = 4.8 · 10−126
+- DVO of CNN > DVO of Linear model: p = 2.9 · 10−170
+
+Figure 7: DCC success rate and DVO scores of CNN, linear and random
+models.
+<img width="1890" height="1410" alt="dcc_dvo" src="https://github.com/user-attachments/assets/5e287eb4-93a7-4ffa-9181-c7232e170585" />
 
 ## Conclusion and Discussion
 

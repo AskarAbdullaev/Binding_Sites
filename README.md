@@ -18,6 +18,7 @@ For this project I used the following modules:
 | matplotlib     | 3.8.4   |
 | torch          | 2.4.1   |
 | sklearn        | 1.4.2   |
+| scipy          | 1.13.1  |
 
 ## File structure
 
@@ -499,10 +500,82 @@ sumes balanced dataset.
 
 Based on the cross-validation result, the bast model (CNN (1\text{\AA}) is then trained on the complete CV-subset to obtain the final model. The linear model (1\text{\AA}) is also trained on the complete CV-subset (as it showed surprisingly high evaluation results, it is worth keeping it for further stages).
 
+
+## Inference
+
+The inference process is not straight-forward. The model trained after the cross-validation
+only produces a scalar score (probability) for a subgrid. To make the result interpretable
+on the protein level, several steps have to be done:
+
+1. Volumetric Map has to be constructed: a 3D grid of voxels that corresponds to the
+original protein voxelization, where each voxel stores a probability score for the voxel
+to be a part of the binding site. The construction of such a map is not trivial. For
+models with 1Å voxel size, the window sampling stride was set to 4. One could use
+a stride of 1, however, the training labels were derived based on the presence of the
+center of the true binding pocket within 4Å from the center of a subgrid. Thus, to
+preserve the initial assumption that each score influences a sub-cube of radius 4, the
+sampling stride in inference was also set to 4.
+
+2. Once scores are derived, the initial shape of the voxelized protein has to be restored.
+I have chosen an approach, which averages the scores in with uniform distance of
+4Å in every direction. Alternatively, a maximum value could be preserved. However,
+that might lead to a more noisy volumetric map.
+
+3. With the volumetric map ready, it is now crucial to decide, what score indicate
+the positive prediction, i.e. the probability threshold. Surprisingly, the choice of the
+threshold does not affect the output a lot (see table). For the sake of confidence and
+reduced computational complexity in further steps, I have chosen the threshold of
+0.8.
+
+4. In principle, the protein can have multiple binding sites, and the model has to be able
+to predict several binding pockets as well. Provided that the data is potentially noisy,
+can be of arbitrary shape and tends to create dense regions of positively predicted
+voxels, I decide to use HDBSCAN clustering [22] (with a single-cluster prediction
+allowed) from Scikit-learn [26] implementation. HDBSCAN is a density-based clus-
+tering algorithm that also allows to filter the noisy points.
+
+5. For every cluster found the convex hull is constructed using SciPy [29] implementa-
+tion. The convex hull for the true pocket is constructed based on the site.mol2 file
+from scPDB database.
+
+6. For the final evaluation, the closest predicted cluster is chosen.
+
+The inference process is computationally intense. A protein with medium size, say 70 ×
+70 × 70Å requires more than 2700 subgrid evaluations even with the chosen stride of 4Å.
+HDBSCAN and Convex Hull computation extends the inference time even further. Due
+to these limitations, only a half of the withheld test set (586 scPDB entries with unique
+UniProt IDs) are used, which takes arounf 30 hours on the available hardware.
+
 ## Domain-Specific Results
 
+Both CNN and linear models are evaluated using two primary metrics: the Distance to
+the Center of the binding site (DCC) and Discretized Volumetric Overlap (DVO).
+DCC measures the Euclidean distance between the model’s point-wise prediction and
+the geometric center of the true binding pocket. A prediction is considered successful if
+the distance is below a certain threshold, typically between 4 and 20 Å. While DCC is
+straightforward to compute, it only considers the proximity to the center and does not
+take the shape or volume of the predicted pocket into account.
+DVO, as the name suggests, evaluates the spatial overlap between the predicted and
+ground-truth binding pockets. Both the protein and the predicted volume are discretized
+into 1 × 1 × 1 Å^3 voxels. Convex hulls of the predicted and true pocket regions are
+computed, and the Jaccard index is calculated:
+
+\[
+J = \frac{|V_r \cap V_p|}{|V_r \cup V_p|}
+\]
+
+where Vr and Vp are the sets of voxels belonging to the real and predicted pockets,
+respectively (the voxel is considered to be in the convex hull if its center point is inside
+the hull). The final evaluation is reported as the average metric score over all predictions.
+To demonstrate the effectiveness of algorithm, both CNN and Linear models were com-
+pared with the baseline. The baseline is obtained by using a ’virtual’ random model:
+and model, which produces a random volumetric probability map with the same positive
+voxel proportion as the CNN model does. Consequently, all the following inference steps
+are applied as usual to get the metrics (DCC and DVO). For reproducibility purpose,
+the random baseline utilizes a fixed random seed.
+
 TBA
-(As I have the separate test set, not intersecting with CV data, I will test the resulting model with DCC and DVO metrics. When ready, I can compare it to DeepSite results and FPocket results)
+(plots)
 
 ## Conclusion and Discussion
 

@@ -1,6 +1,7 @@
 # Binding_Sites
 Practical Work on Binding Sites (bases on DeepSite approach)
 
+
 ## Dependencies
 
 For this project I used the following modules:
@@ -99,6 +100,17 @@ For this project I used the following modules:
             |- ... (other folds)
         |
         |- ... (other models)
+    |
+    |- Inference (folder with subgrid scores)
+        |- cnn
+            |- 1a4z_4.npy
+            |- (...other entries from the test set)
+        |
+        |- linear
+            |- 1a4z_4.npy
+            |- (...other entries from the test set)
+    |
+    |- final_metrics.csv
 ```
 
 ## Introduction
@@ -675,3 +687,5 @@ Drug Design: Exploring Pocket Space. en. The AAPS Journal, 15, 1, (January
 2013), 228–241. issn: 1550-7416. doi: 10 . 1208 / s12248 - 012 - 9426 - 6. Retrieved
 03/28/2025 from http://link.springer.com/10.1208/s12248-012-9426-6.
 
+
+>>>>>>> db676e4472fad7c79241feb275350b8d5cec7147

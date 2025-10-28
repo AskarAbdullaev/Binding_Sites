@@ -40,6 +40,9 @@ For this project I used the following modules:
 |
 |- cross_validation.ipynb (notebook for cross-validation and final training)
 |
+|- inference_utilities.py (utilities for the 'inference.ipynb' notebook)
+|- inference.ipynb (notebook with the final inference and domain-specific metrics)
+|
 |- Data 
     |
     |- scPDB (original scPDB dataset)

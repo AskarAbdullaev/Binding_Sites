@@ -780,5 +780,92 @@ def analyse_metrics(metrics_path: str,
     return report
 
 
+def analyse_scope(metrics_path: str = 'Data/final_metrics.csv',
+                  main_csv_path: str = 'Data/database.csv',
+                  model_name: str = 'cnn',
+                  threshold: float = 0.9,
+                  save: str = None):
+    """
+    Plot and aggregate final metrics
 
+    Args:
+        metrics_path (str, optional): path to the final metrics CSV. Defaults to Data/final_metrics.csv.
+        main_csv_path (str, optional): path to the main CSV. Defaults to Data/database.csv.
+        model_name (str, optional): name of the chosen model. Defaults to 'cnn'ArithmeticError.
+        threshold (float, optional): threshold to choose. Defaults to 0.5.
+        save (str, optional): path to save the plot to. Defaults to None
+    """
 
+    assert isinstance(metrics_path, str), f'metrics_path must be str, not {type(metrics_path)}'
+    assert isinstance(main_csv_path, str), f'main_csv_path must be str, not {type(main_csv_path)}'
+    assert isinstance(model_name, str), f'model_name must be str, not {type(model_name)}'
+    assert isinstance(threshold, float | int), f'threshold must be float (int), not {type(float)}'
+    assert 0 <= threshold <= 1, f'threshold must be between 0 and 1, not {threshold}'
+    assert isinstance(save, str | None), f'save must be str or None, not {type(save)}'
+
+    # Load the database and extract SCOPe identifiers
+    database = pd.read_csv(main_csv_path, sep='\t')[['scPDB ID', 'SCOPe Chain Classes']]
+    database.rename(columns={'SCOPe Chain Classes': 'scope'}, inplace=True)
+    database['scope'] = database['scope'].apply(lambda x: list(set('.'.join(xx.split(' ')[1].split('.')[:2]) for xx in x.split(' / '))) if isinstance(x, str) else [])
+
+    # Unravel the database: make each scPDB - SCOPe a separate line
+    unraveled = []
+    for i, row in database.iterrows():
+        for family in row['scope']:
+            unraveled.append([row['scPDB ID'], family])
+    unraveled = pd.DataFrame(unraveled, columns=['ID', 'scope'])
+
+    # Load the metrics
+    metrics_df = pd.read_csv(metrics_path, sep='\t')
+    metrics_df = metrics_df.loc[(metrics_df['Threshold'] == threshold) & (metrics_df['Model'] == model_name)]
+    metrics_df.rename(columns={'scPDB ID': 'ID'}, inplace=True)
+    metrics_df.drop(columns=['Threshold', 'Model'], inplace=True)
+
+    # Merge metrics with an unraveled database (inner mode)
+    unraveled = pd.merge(unraveled, metrics_df, how='inner')
+    unraveled.drop(columns=['ID'], inplace=True)
+    print(f'Different SCOPe families: {len(unraveled['scope'].unique())}')
+
+    # Get mean, std and count for metrics grouped by SCOPe IDs
+    families = unraveled.groupby(by='scope', as_index=False).mean()
+    families_std = unraveled.groupby(by='scope', as_index=False).std()
+    families_std.rename(columns={'DCC': 'std DCC', 'DVO': 'std DVO'}, inplace=True)
+    counts = unraveled[['scope', 'DCC']].groupby(by='scope', as_index=False).count()
+    counts.rename(columns={'DCC': 'N'}, inplace=True)
+    families = pd.merge(families, counts, how='left')
+    families = pd.merge(families, families_std, how='left')
+
+    # Compute confidence intervals of mean for DCC and DVO
+    families['DCC CI'] = 1.96 * families['std DCC'] / np.sqrt(families['N'])
+    families['DCC upper'] = families['DCC'] + families['DCC CI']
+    families['DCC lower'] = families['DCC'] - families['DCC CI']
+    families['DVO CI'] = 1.96 * families['std DVO'] / np.sqrt(families['N'])
+    families['DVO upper'] = families['DVO'] + families['DVO CI']
+    families['DVO lower'] = families['DVO'] - families['DVO CI']
+    families.loc[families['DCC lower'] < 0, 'DCC lower'] = 0
+    families.loc[families['DVO lower'] < 0, 'DVO lower'] = 0
+    families = families.loc[families['N'] > 4]
+    print(f'SCOPe families with at least 5 examples: {len(families)}')
+    families.set_index('scope', inplace=True)
+
+    # Plot DCC bars
+    ax_dcc = families[['DCC upper']].plot.bar(color=['lightgrey'], label=None)
+    ax_dcc = families[['DCC']].plot(color=['black'], ax=ax_dcc, label=None, style='_')
+    ax_dcc = families[['DCC lower']].plot.bar(color=['white'], ax=ax_dcc, label=None)
+    ax_dcc.set_title('DCC Mean values (CI, p=.05) per SCOPe family\n(only families that have >= 5 examples in the test set)')
+    ax_dcc.legend([])
+
+     # Save if required
+    if save is not None:
+        ax_dcc.get_figure().savefig(save.split('.')[0] + '_dcc.' + save.split('.')[1])
+
+    # Plot DVO bars
+    ax_dvo = families[['DVO upper']].plot.bar(color=['lightgrey'], label=None)
+    ax_dvo = families[['DVO']].plot(color=['black'], ax=ax_dvo, label=None, style='_')
+    ax_dvo = families[['DVO lower']].plot.bar(color=['white'], ax=ax_dvo, label=None)
+    ax_dvo.set_title('DVO Mean values (CI, p=.05) per SCOPe family\n(only families that have >= 5 examples in the test set)')
+    ax_dvo.legend([])
+
+    # Save if required
+    if save is not None:
+        ax_dvo.get_figure().savefig(save.split('.')[0] + '_dvo.' + save.split('.')[1])

@@ -758,16 +758,17 @@ def analyse_metrics(metrics_path: str,
         dvo_ax.set_title('DVO Boxplot')
         dvo_ax.set_ylabel('DVO in %')
 
+    dvo_ax.set_xticks(np.arange(1, n_models+1))
+    dvo_ax.set_xticklabels(metrics['Model'].unique())
+    dcc_ax.legend()
+    dcc_ax.grid('--')
+
     # Show the plot (and save if required)
     if suptitle is not None:
         fig.suptitle(suptitle)
     if save is not None:
         fig.savefig(save)
     
-    dvo_ax.set_xticks(np.arange(1, n_models+1))
-    dvo_ax.set_xticklabels(metrics['Model'].unique())
-    dcc_ax.legend()
-    dcc_ax.grid('--')
     plt.tight_layout()
     plt.show()
 
@@ -777,4 +778,7 @@ def analyse_metrics(metrics_path: str,
     report = report.transpose()
 
     return report
+
+
+
 

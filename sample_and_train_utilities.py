@@ -265,7 +265,7 @@ def visualize_voxels(scpdb_id: str,
         voxel_size (int, optional): choose the voxel size. Defaults to.
         show_binding_site (bool, optional): also highlight the binding site. Defaults to True.
         database_path (str, optional): path to the main database. Defaults to 'Data/database.csv'.
-        atoms_dir (str, optional): path to the folder with atom CSVs. Defaults to 'Data/Atoms'.
+        voxels_dir (str, optional): path to the folder with voxelized proteins. Defaults to 'Data/Voxels'.
         scpdb_dir (str, optional): path to the original scPDB folder. Defaults to 'Data/scPDB'.
         dpi (int, optional): resoluion. Defaults to 300.
         title (bool, optional): allows to turn off the title. Defaults to True.
@@ -279,7 +279,7 @@ def visualize_voxels(scpdb_id: str,
     assert isinstance(dpi, int), f'dpi must be int, not {type(dpi)}'
     assert isinstance(zoom, int), f'zoom must be int, not {type(zoom)}'
     assert isinstance(voxel_size, int), f'voxel_size must be int, not {type(voxel_size)}'
-    assert isinstance(voxels_dir, str), f'atoms_dir must be str, not {type(voxels_dir)}'
+    assert isinstance(voxels_dir, str), f'voxels_dir must be str, not {type(voxels_dir)}'
     assert isinstance(scpdb_dir, str), f'scpdb_dir must be str, not {type(scpdb_dir)}'
     assert isinstance(show_binding_site, bool), f'show_binding_site must be bool, not {type(show_binding_site)}'
     assert isinstance(title, bool), f'title must be bool, not {type(title)}'
@@ -296,7 +296,13 @@ def visualize_voxels(scpdb_id: str,
             assert channel in possible_channels, f'unknown channel "{channel}", consider: {possible_channels}'
         channels_ids = [possible_channels.index(channel) for channel in channels]
 
-    channel_colours = {'Positive Ionizable': 'blue', 'Negative Ionizable': 'red', 'Hydrophobic': 'grey', 'Aromatic': 'darkgrey', 'Donor': 'lightblue', 'Acceptor': 'pink', 'Metal': 'orange'}
+    channel_colours = {'Positive Ionizable': 'blue',
+                       'Negative Ionizable': 'red',
+                       'Hydrophobic': 'grey',
+                       'Aromatic': 'darkgrey',
+                       'Donor': 'lightblue',
+                       'Acceptor': 'pink',
+                       'Metal': 'orange'}
     
     atoms_grid = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'atoms_grid.npy'))
     occupancy = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'occupancy.npy'))
@@ -305,6 +311,8 @@ def visualize_voxels(scpdb_id: str,
     atoms[:,:,:,:-1] = atoms[:,:,:,:-1] * occupancy[..., None]
     centroid = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'site_center.npy'))
     in_site = np.zeros_like(occupancy)
+
+    in_site_voxels = np.full(atoms.shape[:-1], 'white', dtype='U5')
 
     if show_binding_site:
         site = open(os.path.join(scpdb_dir, scpdb_id, 'site.mol2'), 'r').read().split('@')[2]
@@ -319,41 +327,36 @@ def visualize_voxels(scpdb_id: str,
             x = int(atom['X'] + shift[0]) // voxel_size
             y = int(atom['Y'] + shift[1]) // voxel_size
             z = int(atom['Z'] + shift[2]) // voxel_size
+            in_site_voxels[x-1:x+2, y-1:y+2, z-1:z+2] = 'black'
             in_site[x-1:x+2, y-1:y+2, z-1:z+2] = 1
 
     # Plot
     fig = plt.figure(dpi=dpi)
     ax = fig.add_subplot(projection='3d')
 
-    # The following block is needed to make atom sizes look correct
-    bbox = ax.get_window_extent().transformed(ax.figure.dpi_scale_trans.inverted())
-    width_inch = bbox.width
-    xrange = atoms.shape[0]
-    points_per_angstrom = width_inch * 72 / (2 * xrange)
+    x, y, z = np.indices((atoms.shape[0] + 1, atoms.shape[1] + 1, atoms.shape[2] + 1)) * voxel_size
 
-    all_triples = list(product(list(range(8, atoms.shape[0]-8)), list(range(8, atoms.shape[1]-8)), list(range(8, atoms.shape[2]-8))))
-    all_triples = sorted(all_triples, key=lambda x: (x[0] - atoms.shape[0])**2 + (x[1] - atoms.shape[1])**2 + (x[2] - atoms.shape[2])**2, reverse=True)
+    x = x[8:-7, 8:-7, 8:-7]
+    y = y[8:-7, 8:-7, 8:-7]
+    z = z[8:-7, 8:-7, 8:-7]
 
-    # plot every atom according to its properties, if show_binding_site, then also add borders to 
-    # atoms, that are parts of a binding site
-    for x, y, z in all_triples:
 
-        if atoms[x, y, z, -1] == 1:
+    # Plot occupied voxels as pale green
 
-            ax.scatter(x, y, z, marker='h', facecolor='lightgreen', alpha=0.1,
-                        s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2)
+    ax.voxels(x, y, z, atoms[8:-7, 8:-7, 8:-7, -1].astype(bool), alpha=0.1, facecolors='lightgreen', linewidth=0.05, shade=True,
+              edgecolors=in_site_voxels[8:-7,8:-7,8:-7])
 
-        for channel, channel_id in zip(channels, channels_ids):
-            if atoms[x, y, z, channel_id] > 10 ** (-7):
-                ax.scatter(x, y, z, marker='h', color=channel_colours[channel],
-                            alpha=atoms[x, y, z, channel_id],
-                            s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2,
-                            edgecolors = None if show_binding_site and in_site[x, y, z] == 0 else 'black',
-                            linewidths = 0 if show_binding_site and in_site[x, y, z] == 0 else 0.3)
-                ax.scatter(x, y, z, marker='1', color='black',
-                            alpha=atoms[x, y, z, channel_id],
-                            linewidth = 0 if show_binding_site and in_site[x, y, z] == 0 else 0.3,
-                            s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2)
+    colors = np.full(atoms.shape[:-1], 'white', dtype='U20')
+    voxels = np.full(atoms.shape[:-1], False, dtype=bool)
+
+    # Plot channels
+    for channel, channel_id in zip(channels, channels_ids):
+
+        voxels[atoms[:, :, :, channel_id] > 0.01] = True
+        colors[atoms[:, :, :, channel_id] > 0.01] = channel_colours[channel]
+    
+    ax.voxels(x, y, z, voxels[8:-7, 8:-7, 8:-7], alpha=0.9, facecolors=colors[8:-7, 8:-7, 8:-7], linewidth=0.25, shade=True,
+              edgecolors=in_site_voxels[8:-7,8:-7,8:-7])
 
     # Add the legend with channel colours
     legend = [
@@ -361,7 +364,7 @@ def visualize_voxels(scpdb_id: str,
         for name, color in channel_colours.items() if name in channels
     ]
     ax.legend(handles=legend,
-            title="Chemical Channels\n(border indicates that voxel\nbelongs to the binding site)",
+            title="Chemical Channels\n(black border indicates that voxel\nbelongs to the binding site)",
             loc="upper left",
             frameon=True,
             fontsize=int(dpi/30),
@@ -383,10 +386,6 @@ def visualize_voxels(scpdb_id: str,
     if save is not None:
         fig.savefig(save)
     plt.show()
-
-
-
-
 
 
 def get_samples_by_id(scpdb_id: str,
@@ -828,7 +827,7 @@ def train_evaluate(model: torch.nn.Module,
     # Return losses per epoch and also true and predicted logits for future analysis of the test part
     return train_loss_per_epoch, test_loss_per_epoch, true_per_epoch, predictions_per_epoch
 
-
+    
 class SiteDataSet(Dataset):
 
     def __init__(self,
@@ -909,9 +908,92 @@ class SiteDataSet(Dataset):
         return self.data[index]
 
 
+class LinearRegression(torch.nn.Module):
+
+    """
+    This model is basically a linear regression of a flattened sub-grid input
+    """
+
+
+    def __init__(self, voxel_size: int = 1):
+        """
+        Args:
+            voxel_size (int, optional): voxel size to expect. Defaults to 1.
+        """
+
+        assert isinstance(voxel_size, int), f'voxel_size must be int, not {type(voxel_size)}'
+        assert voxel_size in {1, 2}, f'currently only voxel_size 1 or 2 is supported'
+
+        super().__init__()
+
+        self.voxel_size = voxel_size
+
+        self.model = torch.nn.Sequential(
+            torch.nn.Flatten(),
+            torch.nn.Linear((16 // self.voxel_size) ** 3 * 8, 1),
+        )
+
+    def forward(self, x):
+        return self.model(x)
+    
+
+# class FlexibleCNN3D(torch.nn.Module):
+
+#     def __init__(self, dropout: float = 0.25, channel_size: int | float = 2):
+#         """
+#         This Model will only be used for hyperparameter search during the pilot run
+
+#         Dropout will be used as it is after convolution layers and with a factor of 2 between dense layers.
+
+#         Channel size will be used with a factor of 16.
+
+#         Args:
+#             dropout (float, optional): dropout. Defaults to 0.25.
+#             channel_size (int | float, optional): relative channel size. Defaults to 2.
+#         """
+
+#         # Check the input
+#         assert isinstance(dropout, float | int), f'dropout must be float or int, not {type(dropout)}'
+#         assert 0 <= dropout, f'dropout must be at least 0, not {dropout}'
+#         assert isinstance(channel_size, float | int), f'channel_size must be int or float, not {type(channel_size)}'
+#         assert 0 < channel_size, f'channel_size must be positive, not {channel_size}'
+        
+#         super().__init__()
+
+#         # Store parameters
+#         self.dropout = dropout
+#         self.channel_size = channel_size
+
+
+#         self.model = torch.nn.Sequential(
+#             torch.nn.Conv3d(8, int(16 * channel_size), kernel_size=8, padding='same'),
+#             torch.nn.ELU(),
+#             torch.nn.Conv3d(int(16 * channel_size), int(16 * (channel_size + 1)), kernel_size=4, padding='same'),
+#             torch.nn.ELU(),
+#             torch.nn.MaxPool3d(2),
+#             torch.nn.Dropout3d(dropout),
+#             torch.nn.Conv3d(int(16 * (channel_size + 1)), int(16 * (channel_size + 2)), kernel_size=4, padding='same'),
+#             torch.nn.ELU(),
+#             torch.nn.Conv3d(int(16 * (channel_size + 2)), int(16 * (channel_size + 3)), kernel_size=4, padding='same'),
+#             torch.nn.ELU(),
+#             torch.nn.MaxPool3d(2),
+#             torch.nn.Dropout3d(dropout),
+#             torch.nn.Flatten(),
+#             torch.nn.Linear(int(64 * 16 * (channel_size + 3)), 128),
+#             torch.nn.ELU(),
+#             torch.nn.Dropout(dropout * 2),
+#             torch.nn.Linear(128, 1)
+#         )
+
+#     def forward(self, x):
+#         return self.model(x)
+    
+
 class FlexibleCNN3D(torch.nn.Module):
 
-    def __init__(self, dropout: float = 0.25, channel_size: int | float = 2):
+    def __init__(self, dropout: float = 0.25,
+                 channel_size: int | float = 2,
+                 voxel_size: int = 1):
         """
         This Model will only be used for hyperparameter search during the pilot run
 
@@ -922,6 +1004,7 @@ class FlexibleCNN3D(torch.nn.Module):
         Args:
             dropout (float, optional): dropout. Defaults to 0.25.
             channel_size (int | float, optional): relative channel size. Defaults to 2.
+            voxel_size (int, optional): voxel size to expect. Defaults to 1.
         """
 
         # Check the input
@@ -929,32 +1012,49 @@ class FlexibleCNN3D(torch.nn.Module):
         assert 0 <= dropout, f'dropout must be at least 0, not {dropout}'
         assert isinstance(channel_size, float | int), f'channel_size must be int or float, not {type(channel_size)}'
         assert 0 < channel_size, f'channel_size must be positive, not {channel_size}'
+        assert isinstance(voxel_size, int), f'voxel_size must be int, not {type(voxel_size)}'
+        assert voxel_size in {1, 2}, 'currently only voxel_size 1 or 2 is supported'
         
         super().__init__()
 
         # Store parameters
         self.dropout = dropout
         self.channel_size = channel_size
+        self.voxel_size = voxel_size
+        self.k = self.voxel_size ** 1.5
 
-
+        # Model itself
         self.model = torch.nn.Sequential(
-            torch.nn.Conv3d(8, int(16 * channel_size), kernel_size=8, padding='same'),
+            torch.nn.Conv3d(8,
+                            int(16 * self.channel_size * self.k),
+                            kernel_size=8 // self.voxel_size,
+                            padding='same'),
             torch.nn.ELU(),
-            torch.nn.Conv3d(int(16 * channel_size), int(16 * (channel_size + 1)), kernel_size=4, padding='same'),
+            torch.nn.Conv3d(int(16 * self.channel_size * self.k),
+                            int(16 * (self.channel_size + 1) * self.k),
+                            kernel_size=4 // self.voxel_size,
+                            padding='same'),
             torch.nn.ELU(),
             torch.nn.MaxPool3d(2),
             torch.nn.Dropout3d(dropout),
-            torch.nn.Conv3d(int(16 * (channel_size + 1)), int(16 * (channel_size + 2)), kernel_size=4, padding='same'),
+            torch.nn.Conv3d(int(16 * (self.channel_size + 1) * self.k),
+                            int(16 * (self.channel_size + 2) * self.k),
+                            kernel_size=4 // self.voxel_size,
+                            padding='same'),
             torch.nn.ELU(),
-            torch.nn.Conv3d(int(16 * (channel_size + 2)), int(16 * (channel_size + 3)), kernel_size=4, padding='same'),
+            torch.nn.Conv3d(int(16 * (self.channel_size + 2) * self.k),
+                            int(16 * (self.channel_size + 3) * self.k),
+                            kernel_size=4 // self.voxel_size,
+                            padding='same'),
             torch.nn.ELU(),
             torch.nn.MaxPool3d(2),
             torch.nn.Dropout3d(dropout),
             torch.nn.Flatten(),
-            torch.nn.Linear(int(64 * 16 * (channel_size + 3)), 128),
+            torch.nn.Linear((4 // self.voxel_size) ** 3 * int(16 * (self.channel_size + 3) * self.k),
+                            int(128 * self.k)),
             torch.nn.ELU(),
             torch.nn.Dropout(dropout * 2),
-            torch.nn.Linear(128, 1)
+            torch.nn.Linear(int(128 * self.k), 1)
         )
 
     def forward(self, x):
@@ -1093,7 +1193,7 @@ def hyperparameter_search(train_folds: Collection[int|str],
 
                 # Initialize the model
                 torch.random.manual_seed(seed)
-                flexible_model = FlexibleCNN3D(dropout=dropout, channel_size=channel_size)
+                flexible_model = FlexibleCNN3D(dropout=dropout, channel_size=channel_size, voxel_size=voxel_size)
 
                 # Run the training loop
                 train_loss_per_epoch, test_loss_per_epoch, true_per_epoch, predictions_per_epoch = train_evaluate(

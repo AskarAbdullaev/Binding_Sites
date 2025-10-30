@@ -15,6 +15,19 @@ from sklearn.cluster import HDBSCAN
 
 DECODER = np.load('decode.npy')
 
+def format_size(size: float | int):
+        if size > 1024 * 1024 * 1024:
+            size /= 1024 * 1024 * 1024
+            return f'{round(size, 0)} Gb'
+        elif size > 1024 * 1024:
+            size /= 1024 * 1024
+            return f'{round(size, 0)} Mb'
+        elif size > 1024:
+            size /= 1024
+            return f'{round(size, 0)} Kb'
+        else:
+            return f'{round(size, 0)} b'
+
 
 def inference(model: torch.nn.Module,
               scpdb_id: str,
@@ -305,6 +318,8 @@ def visualize_volumetric_map(scpdb_id: str,
     # Getting the true binding site
     centroid = np.load(os.path.join(voxels_dir, str(voxel_size), scpdb_id, 'site_center.npy'))
     in_site = np.zeros_like(v_map)
+    in_site_voxels = np.full(v_map.shape, 'white', dtype='U5')
+
 
     if show_binding_site:
         site = open(os.path.join(scpdb_dir, scpdb_id, 'site.mol2'), 'r').read().split('@')[2]
@@ -320,44 +335,34 @@ def visualize_volumetric_map(scpdb_id: str,
             y = int(atom['Y'] + shift[1]) // voxel_size
             z = int(atom['Z'] + shift[2]) // voxel_size
             in_site[x-1:x+2, y-1:y+2, z-1:z+2] = 1
+            in_site_voxels[x-1:x+2, y-1:y+2, z-1:z+2] = 'black'
 
     # Plot
     fig = plt.figure(dpi=dpi)
     ax = fig.add_subplot(projection='3d')
 
-    # The following block is needed to make atom sizes look correct
-    bbox = ax.get_window_extent().transformed(ax.figure.dpi_scale_trans.inverted())
-    width_inch = bbox.width
-    xrange = v_map.shape[0]
-    points_per_angstrom = width_inch * 72 / (2 * xrange)
+    # Clip atoms grid and create indices
+    atoms = atoms[:v_map.shape[0], :v_map.shape[1], :v_map.shape[2]]
+    x, y, z = np.indices((v_map.shape[0] + 1, v_map.shape[1] + 1, v_map.shape[2] + 1)) * voxel_size
 
-    all_triples = list(product(list(range(6, v_map.shape[0]-6)), list(range(6, v_map.shape[1]-6)), list(range(6, v_map.shape[2]-6))))
-    all_triples = sorted(all_triples, key=lambda x: (x[0] - v_map.shape[0])**2 + (x[1] - v_map.shape[1])**2 + (x[2] - v_map.shape[2])**2, reverse=True)
+    x = x[6:-6, 6:-6, 6:-6]
+    y = y[6:-6, 6:-6, 6:-6]
+    z = z[6:-6, 6:-6, 6:-6]
 
-    # plot every atom according to its properties, if show_binding_site, then also add borders to 
-    # atoms, that are parts of a binding site
-    for x, y, z in all_triples:
 
-        # Only rander truly occupied voxels
-        if atoms[x, y, z, -1] == 1:
+    # Plot occupied voxels as pale green
+    ax.voxels(x, y, z, atoms[6:-6, 6:-6, 6:-6, -1].astype(bool), alpha=0.1, facecolors='lightgreen', linewidth=0.05, shade=True,
+              edgecolors=in_site_voxels[6:-6, 6:-6, 6:-6])
 
-            ax.scatter(x, y, z, marker='h', facecolor='lightgreen', alpha=0.1,
-                        s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2,
-                        edgecolors = None if show_binding_site and in_site[x, y, z] == 0 else 'black',
-                        linewidths = 0 if show_binding_site and in_site[x, y, z] == 0 else 0.3)
-            
-            # Highlight 'positive' voxels
-            if v_map[x, y, z] > threshold:
+    # Create grids of voxels of their colors
+    colors = np.full(v_map.shape, 'white', dtype='U6')
+    voxels = np.full(v_map.shape, False, dtype=bool)
+    voxels[(v_map > threshold) & (atoms[..., -1] == 1)] = True
+    colors[(v_map > threshold) & (atoms[..., -1] == 1)] = 'orange'
 
-                ax.scatter(x, y, z, marker='h', facecolor='orange', alpha=v_map[x,y,z],
-                            s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2,
-                            edgecolors = None if show_binding_site and in_site[x, y, z] == 0 else 'black',
-                            linewidths = 0 if show_binding_site and in_site[x, y, z] == 0 else 0.3)
-                    
-                ax.scatter(x, y, z, marker='1', color='black',
-                            alpha=v_map[x,y,z],
-                            linewidth = 0 if show_binding_site and in_site[x, y, z] == 0 else 0.3,
-                            s = (voxel_size * np.sqrt(2) * (1 + zoom // 3) * points_per_angstrom) ** 2)
+    # Plot thresholded voxels
+    ax.voxels(x, y, z, voxels[6:-6, 6:-6, 6:-6], alpha=0.9, facecolors=colors[6:-6, 6:-6, 6:-6], linewidth=0.25, shade=True,
+              edgecolors=in_site_voxels[6:-6, 6:-6, 6:-6])
 
     # Add the legend with channel colours
     legend = [

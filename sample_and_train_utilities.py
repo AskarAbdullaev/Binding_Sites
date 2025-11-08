@@ -1,11 +1,9 @@
 import os
 from typing import Collection
-from collections import Counter
-from itertools import product
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
-from pathlib import Path
 
 from tqdm import tqdm
 from matplotlib import pyplot as plt
@@ -14,14 +12,28 @@ from matplotlib.patches import Patch
 import torch
 from torch.utils.data import DataLoader, Dataset
 from sklearn.metrics import (
-    roc_auc_score, average_precision_score,
-    precision_recall_curve, roc_curve, confusion_matrix,
+    roc_auc_score, average_precision_score, confusion_matrix,
     accuracy_score, f1_score, precision_score, recall_score,
     classification_report
 )
 
 
 DECODER = np.load('decode.npy')
+
+###########################################################
+# Mostly needed for 'sample_and_train.ipynb' notebook and
+#                   'cross_validation.ipynb' notebook
+###########################################################
+# This module is meant to facilitate training:
+#
+#   - convert atoms layout to voxel grids
+#   - get samples (subgrids) from full voxel grids
+#   - define PyTorch DataSet
+#   - define PyTorch Models
+#   - introduce train/evaluation loop
+#   - wrap hyperparameters search into a function
+#   - tools for statistical and visual analysis of runs
+###########################################################
 
 
 def format_size(size: float | int):
@@ -355,7 +367,7 @@ def visualize_voxels(scpdb_id: str,
         voxels[atoms[:, :, :, channel_id] > 0.01] = True
         colors[atoms[:, :, :, channel_id] > 0.01] = channel_colours[channel]
     
-    ax.voxels(x, y, z, voxels[8:-7, 8:-7, 8:-7], alpha=0.9, facecolors=colors[8:-7, 8:-7, 8:-7], linewidth=0.25, shade=True,
+    ax.voxels(x, y, z, voxels[8:-7, 8:-7, 8:-7], alpha=0.9, facecolors=colors[8:-7, 8:-7, 8:-7], linewidth=0.05, shade=True,
               edgecolors=in_site_voxels[8:-7,8:-7,8:-7])
 
     # Add the legend with channel colours
@@ -384,7 +396,7 @@ def visualize_voxels(scpdb_id: str,
     if title:
         ax.set_title(f'Entry {scpdb_id}, channels shown: {", ".join(channels)}', fontsize=int(dpi/20))
     if save is not None:
-        fig.savefig(save)
+        fig.savefig(save, bbox_inches="tight", pad_inches=0)
     plt.show()
 
 
@@ -937,58 +949,6 @@ class LinearRegression(torch.nn.Module):
         return self.model(x)
     
 
-# class FlexibleCNN3D(torch.nn.Module):
-
-#     def __init__(self, dropout: float = 0.25, channel_size: int | float = 2):
-#         """
-#         This Model will only be used for hyperparameter search during the pilot run
-
-#         Dropout will be used as it is after convolution layers and with a factor of 2 between dense layers.
-
-#         Channel size will be used with a factor of 16.
-
-#         Args:
-#             dropout (float, optional): dropout. Defaults to 0.25.
-#             channel_size (int | float, optional): relative channel size. Defaults to 2.
-#         """
-
-#         # Check the input
-#         assert isinstance(dropout, float | int), f'dropout must be float or int, not {type(dropout)}'
-#         assert 0 <= dropout, f'dropout must be at least 0, not {dropout}'
-#         assert isinstance(channel_size, float | int), f'channel_size must be int or float, not {type(channel_size)}'
-#         assert 0 < channel_size, f'channel_size must be positive, not {channel_size}'
-        
-#         super().__init__()
-
-#         # Store parameters
-#         self.dropout = dropout
-#         self.channel_size = channel_size
-
-
-#         self.model = torch.nn.Sequential(
-#             torch.nn.Conv3d(8, int(16 * channel_size), kernel_size=8, padding='same'),
-#             torch.nn.ELU(),
-#             torch.nn.Conv3d(int(16 * channel_size), int(16 * (channel_size + 1)), kernel_size=4, padding='same'),
-#             torch.nn.ELU(),
-#             torch.nn.MaxPool3d(2),
-#             torch.nn.Dropout3d(dropout),
-#             torch.nn.Conv3d(int(16 * (channel_size + 1)), int(16 * (channel_size + 2)), kernel_size=4, padding='same'),
-#             torch.nn.ELU(),
-#             torch.nn.Conv3d(int(16 * (channel_size + 2)), int(16 * (channel_size + 3)), kernel_size=4, padding='same'),
-#             torch.nn.ELU(),
-#             torch.nn.MaxPool3d(2),
-#             torch.nn.Dropout3d(dropout),
-#             torch.nn.Flatten(),
-#             torch.nn.Linear(int(64 * 16 * (channel_size + 3)), 128),
-#             torch.nn.ELU(),
-#             torch.nn.Dropout(dropout * 2),
-#             torch.nn.Linear(128, 1)
-#         )
-
-#     def forward(self, x):
-#         return self.model(x)
-    
-
 class FlexibleCNN3D(torch.nn.Module):
 
     def __init__(self, dropout: float = 0.25,
@@ -1213,18 +1173,21 @@ def hyperparameter_search(train_folds: Collection[int|str],
                 np.save(os.path.join(path, 'predictions.npy'), np.array(predictions_per_epoch))
 
 
-def analyse_hyperparameters(dir: str = 'Data/CV/pilot') -> pd.DataFrame:
+def analyse_hyperparameters(dir: str = 'Data/CV/pilot',
+                            save: str = None) -> pd.DataFrame:
     """
     Allows to briefly analyse hyperparameters stored in dir
 
     Args:
         dir (str, optional): path to the folder with hyperparameters. Defaults to 'Data/CV/pilot'.
+        save (str, optional): path to save the plot. Defaults to None.
 
     Returns:
         pd.DataFrame (df of hyperparameters)
     """
 
-    assert isinstance(dir, str), f'dir must be str, not {type(dir)}'
+    if save is not None:
+        assert isinstance(save, str), f'save must be str, not {type(save)}'
 
     # Get all combination folders
     assert isinstance(dir, str), f'dir must be str, not {type(dir)}'
@@ -1307,6 +1270,9 @@ def analyse_hyperparameters(dir: str = 'Data/CV/pilot') -> pd.DataFrame:
     # Add suptitle and show the result
     fig.suptitle('Train and Test losses per HP combination.\n(Early stop is triggered with patience 5; Loss is in units per sample)')
     plt.tight_layout()
+
+    if save:
+        fig.savefig(save, bbox_inches="tight", pad_inches=0)
     plt.show()
 
     stats = pd.DataFrame(stats)
@@ -1314,7 +1280,8 @@ def analyse_hyperparameters(dir: str = 'Data/CV/pilot') -> pd.DataFrame:
         
 
 def analyse_runs(dir: str = "Data/CV",
-                 out_dir: str = "Data/CV/analysis") -> pd.DataFrame:
+                 out_dir: str = "Data/CV/analysis",
+                 save: str = None) -> pd.DataFrame:
     """
     Analysis of CV logs from 'dir' (Data/CV by default):
     - computed AUC ROC, APS, Accuracy, F1 for every model/fold/epoch;
@@ -1326,10 +1293,16 @@ def analyse_runs(dir: str = "Data/CV",
     Args:
       dir (str, optional): path the CV directory. Defaults to Data/CV.
       out_dir (str, optional): path to store aggregated CSVs and plots. Defaults to Data/CV/analysis.
+      save (str, optional): path to save the plot. Defaults to None.
 
     Returns:
         pd.DataFrame (summary)
     """
+
+    assert isinstance(dir, str), f'dir must be str, not {type(dir)}'
+    assert isinstance(out_dir, str), f'out_dir must be str, not {type(out_dir)}'
+    if save is not None:
+        assert isinstance(save, str), f'save must be str, not {type(save)}'
 
     base_dir = Path(dir)
     out_dir = Path(out_dir)
@@ -1497,6 +1470,8 @@ def analyse_runs(dir: str = "Data/CV",
     # Add suptitle and show the result
     fig.suptitle('Train and Test losses per model.\n(Early stop is triggered with patience 3; Loss is in units per sample)')
     plt.tight_layout()
+    if save:
+        fig.savefig(save, bbox_inches="tight", pad_inches=0)
     plt.show()
 
     # Aggregate APS and AUC ROC, F1, Accuracy
@@ -1599,6 +1574,8 @@ def analyse_runs(dir: str = "Data/CV",
         ax.legend()
         fig.tight_layout()
         fig.savefig(out_dir / f'{metric}.png', dpi=220)
+        if save:
+            fig.savefig('.'.join(save.split('.')[:-1]) + f'_bar_{metric}.{save.split('.')[-1]}', bbox_inches="tight", pad_inches=0)
 
         plt.show()
     

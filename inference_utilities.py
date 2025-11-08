@@ -15,6 +15,20 @@ from sklearn.cluster import HDBSCAN
 
 DECODER = np.load('decode.npy')
 
+###########################################################
+# Mostly needed for 'inference.ipynb' notebook
+###########################################################
+# This module is meant to facilitate inference and final evaluation:
+#
+#   - wrap model inference as a function
+#   - compute volumetric maps and visualize them
+#   - tools to compute DCC metric
+#   - tool to compute DVO metric
+#   - introduce train/evaluation loop
+#   - analysis of results
+###########################################################
+
+
 def format_size(size: float | int):
         if size > 1024 * 1024 * 1024:
             size /= 1024 * 1024 * 1024
@@ -265,6 +279,8 @@ def visualize_volumetric_map(scpdb_id: str,
                              dpi: int = 300,
                              title: bool = True,
                              zoom: int = 0,
+                             linewidth_default: float | int = 0.05,
+                             linewidth_highlighted: float | int = 0.25,
                              save: str = None):
     """
     Allows to visualize a volumetric map obtained after the inference
@@ -282,6 +298,8 @@ def visualize_volumetric_map(scpdb_id: str,
         dpi (int, optional): resoluion. Defaults to 300.
         title (bool, optional): allows to turn off the title. Defaults to True.
         zoom (int, optional): allows to zoom in the plot. Defaults to 0.
+        linewidth_default (float | int, optional): sets voxels edges width for default voxels. Defaults to 0.05.
+        linewidth_highlighted (float | int, optional): sets voxels edges width for highlighted voxels. Defaults to 0.25.
         save (str, optional): path to save the plot to if any. Defaults to None.
     """
     
@@ -290,6 +308,11 @@ def visualize_volumetric_map(scpdb_id: str,
     assert isinstance(scpdb_id, str), f'scpdb_id must be str, not {type(scpdb_id)}'
     assert isinstance(dpi, int), f'dpi must be int, not {type(dpi)}'
     assert isinstance(zoom, int), f'zoom must be int, not {type(zoom)}'
+    assert isinstance(linewidth_default, float | int), f'linewidth_default must be float | int, not {type(linewidth_default)}'
+    assert isinstance(linewidth_highlighted, float | int), f'linewidth_highlighted must be float | int, not {type(linewidth_highlighted)}'
+    assert zoom >= 0, f'zoom must be non-negative, not {zoom}'
+    assert linewidth_default >= 0, f'linewidth_default must be non-negative, not {linewidth_default}'
+    assert linewidth_highlighted >= 0, f'linewidth_highlighted must be non-negative, not {linewidth_highlighted}'
     assert isinstance(threshold, float | int), f'threshold must be float (or 0 / 1), not {type(threshold)}'
     assert 0 <= threshold <= 1, f'threshold must be between 0 and 1, not {threshold}'
     assert isinstance(inference_dir, str), f'inference_dir must be str, not {type(inference_dir)}'
@@ -351,7 +374,7 @@ def visualize_volumetric_map(scpdb_id: str,
 
 
     # Plot occupied voxels as pale green
-    ax.voxels(x, y, z, atoms[6:-6, 6:-6, 6:-6, -1].astype(bool), alpha=0.1, facecolors='lightgreen', linewidth=0.05, shade=True,
+    ax.voxels(x, y, z, atoms[6:-6, 6:-6, 6:-6, -1].astype(bool), alpha=0.1, facecolors='lightgreen', linewidth=linewidth_default, shade=True,
               edgecolors=in_site_voxels[6:-6, 6:-6, 6:-6])
 
     # Create grids of voxels of their colors
@@ -361,7 +384,7 @@ def visualize_volumetric_map(scpdb_id: str,
     colors[(v_map > threshold) & (atoms[..., -1] == 1)] = 'orange'
 
     # Plot thresholded voxels
-    ax.voxels(x, y, z, voxels[6:-6, 6:-6, 6:-6], alpha=0.9, facecolors=colors[6:-6, 6:-6, 6:-6], linewidth=0.25, shade=True,
+    ax.voxels(x, y, z, voxels[6:-6, 6:-6, 6:-6], alpha=0.9, facecolors=colors[6:-6, 6:-6, 6:-6], linewidth=linewidth_highlighted, shade=True,
               edgecolors=in_site_voxels[6:-6, 6:-6, 6:-6])
 
     # Add the legend with channel colours
@@ -390,7 +413,7 @@ def visualize_volumetric_map(scpdb_id: str,
     if title:
         ax.set_title(f"Volumetric Map of {scpdb_id}\n(probabilities for voxels to be in a binding site)", fontsize=int(dpi/20))
     if save is not None:
-        fig.savefig(save)
+        fig.savefig(save, bbox_inches="tight", pad_inches=0)
     plt.show()
 
 
@@ -769,12 +792,11 @@ def analyse_metrics(metrics_path: str,
     dcc_ax.grid('--')
 
     # Show the plot (and save if required)
+    plt.tight_layout()
     if suptitle is not None:
         fig.suptitle(suptitle)
     if save is not None:
         fig.savefig(save)
-    
-    plt.tight_layout()
     plt.show()
 
     # Report

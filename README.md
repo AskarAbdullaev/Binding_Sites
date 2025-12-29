@@ -620,7 +620,14 @@ models.
 
 ## Conclusion and Discussion
 
-TBA
+Summary. The results demonstrate that even a relatively lightweight 3D Convolutional model can learn spatial–chemical patterns and efficiently use them for binding site prediction in proteins. The CNN model confidently outperforms both linear and random baselines in the test data. This suggests that the geometric and chemical information encoded in voxelized protein layouts remains highly informative, despite the simplifications introduced during preprocessing. It is also shown that increasing of the voxel sizes and the corresponding decrease of the information density drastically affect the performance of the method. The high reproducibility of the DeepSite approach on a more recent version of the scPDB database (2017 vs 2013) indicates that such voxel-based 3D representations is still able to capture meaningful relationships between structure and function.
+
+Nevertheless, the finally obtained DCC and DVO metrics also highlight the complexity of binding-site prediction and the sensitivity of the task to the amount of data and a proper choice of hyperparameters (due to computational limitations only a half of the available data were actually used). In particular, deviations in the voxel size, the number of channels, or in the batch size can lead to measurable performance losses. This observation implies that future work should focus on the application of more exquisite chemical features computations and environmental properties descriptors (e.g. RDKit). Possible extensions, partially mentioned also in the DeepSite paper, include the incorporation electrostatic potentials, the addition of solvent molecules, and structural dissimilarity analysis during data splitting.
+
+The study also reveals several important limitations of the approach. First of all, the sensitivity of volumetric convolution methods to post-processing choices: the post-processing hyperparameter space is very vast and practically impossible to investigate completely (radius of aggregation, probability threshold, clustering algorithms and their parameters, etc.). Another important limitation is a computationally intensive inference, which becomes a time bottleneck for the pipeline. Possible improvements include more efficient subgrid sampling, GPU-assisted inference, or stride selection to reduce computational cost.
+
+Contribution and further work. This study contributes to the reproducibility of deep learning approach in structural bioinformatics. In spite of the inferior performance than that of the DeepSite itself, re-implementing and re-evaluating of the method on the current version of data confirms the validity of the approach in general, and also highlights practical issues that accompany it: vast space of hyperparameters, structural redundancy, and computational scalability. While the databases of structural protein data continue to grow in size and quality, the discussed framework can serve as an example for further research toward interpretable and efficient ML-driven binding-site prediction.
+
 
 ## References
 
